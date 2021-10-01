@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LOGGED_IN = true;
+const LOGGED_IN = false;
 
 const Navbar = () => {
   return (
