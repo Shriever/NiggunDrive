@@ -4,8 +4,8 @@ import Wrapper from '../components/Wrapper'
 const login = () => {
     return (
       <Wrapper>
-        <h1 className='text-center text-3xl mt-4 mb-3 rounded'>Admin Login</h1>
-        <div className='max-w-md lg:max-w-sm shadow-xl mx-auto  pt-2 flex flex-col items-center p-6 py-8'>
+        <h1 className='text-center text-3xl mt-5 mb-3 rounded font-semibold'>Admin Login</h1>
+        <div className='max-w-md xl:max-w-sm sm:shadow-xl mx-auto  pt-2 flex flex-col items-center p-6 py-8'>
           <input
             type='email'
             placeholder='Email Address'
