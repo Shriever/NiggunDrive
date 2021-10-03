@@ -1,10 +1,18 @@
 import React from 'react';
 
-const MyForm: React.FC<{}> = ({children}) => {
+type Props = React.DetailedHTMLProps<
+  React.FormHTMLAttributes<HTMLFormElement>,
+  HTMLFormElement
+>;
+
+const MyForm = (props: Props) => {
   return (
-    <div className='max-w-md xl:max-w-sm sm:shadow-xl mx-auto  pt-2 flex flex-col items-center p-6 py-8'>
-      {children}
-    </div>
+    <form
+      {...props}
+      className='max-w-md xl:max-w-sm sm:shadow-xl mx-auto  pt-2 flex flex-col items-center p-6 py-8'
+    >
+      {props.children}
+    </form>
   );
 };
 
