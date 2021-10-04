@@ -7,9 +7,11 @@ import Wrapper from '../components/Wrapper';
 const Home: NextPage = () => {
   return (
     <Wrapper>
-      {[0, 1, 2].map((_, idx) => (
-        <Niggun key={idx} />
-      ))}
+      <div className='mx-auto max-w-md mt-6'>
+        {[0, 1, 2].map((_, idx) => (
+          <Niggun key={idx} />
+        ))}
+      </div>
     </Wrapper>
   );
 };
