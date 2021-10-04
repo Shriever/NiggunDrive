@@ -7,6 +7,9 @@ import Wrapper from '../components/Wrapper';
 const upload = () => {
   return (
     <Wrapper>
+      <h1 className='text-center text-3xl mt-5 mb-3 rounded font-semibold'>
+        Upload Niggun
+      </h1>
       <Formik
         initialValues={{ title: '' }}
         onSubmit={() => {
