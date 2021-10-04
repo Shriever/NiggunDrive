@@ -30,7 +30,7 @@ const Niggun = () => {
   const duration = audioRef.current?.duration || 0;
 
   return (
-    <div>
+    <div className='shadow mb-4 p-2'>
       <div className='flex'>
         <PlayPause />
         <span>{formatTime(duration)}</span>
