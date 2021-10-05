@@ -1,5 +1,5 @@
 import React from 'react';
-import { IoPlayOutline, IoPauseOutline } from 'react-icons/io5';
+import { IoPlaySharp, IoPauseSharp } from 'react-icons/io5';
 
 type Props = {
   isPlaying: boolean;
@@ -7,14 +7,19 @@ type Props = {
 };
 
 const PlayPause = ({ isPlaying, onPlayPauseClick }: Props) => {
+  const size = '1.2em';
   return (
     <button
       onClick={() => {
         onPlayPauseClick(!isPlaying);
       }}
-      className='rounded'
+      className='rounded-full bg-green-500 w-7 h-7 flex items-center justify-center text-white text-lg mr-2'
     >
-      {isPlaying ? <IoPauseOutline /> : <IoPlayOutline />}
+      {isPlaying ? (
+        <IoPauseSharp className="pl-0.5" size={size} />
+      ) : (
+        <IoPlaySharp className="pl-1" size={size} />
+      )}
     </button>
   );
 };

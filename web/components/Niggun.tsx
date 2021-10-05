@@ -109,28 +109,30 @@ const Niggun = () => {
   // `;
 
   return (
-    <div suppressHydrationWarning={true} className='shadow mb-4 p-2'>
-      <div className='flex justify-between'>
-        <div className='flex'>
-          <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
-        <h4>{track.title}</h4>
+    <div suppressHydrationWarning={true}>
+      <div className='shadow mb-4 p-4'>
+        <div className='flex justify-between'>
+          <div className='flex'>
+            <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
+            <h4>{track.title}</h4>
+          </div>
+          {true ? <IoHeartOutline /> : <IoHeart />}
         </div>
-        {true ? <IoHeartOutline /> : <IoHeart />}
-      </div>
 
-      <div className='flex items-center'>
-        <span className='mr-2'>{formatTime(duration)}</span>
-        <input
-          type='range'
-          step='0.1'
-          min='0'
-          max={duration ? duration : `${duration}`}
-          value={trackProgress}
-          onChange={e => onScrub(e.target.value)}
-          onMouseUp={onScrubEnd}
-          onKeyUp={onScrubEnd}
-          // style={{ "&:hover": {background: trackStyling} }}
-        />
+        <div className='flex items-center'>
+          <span className='mr-2'>{formatTime(duration)}</span>
+          <input
+            type='range'
+            step='0.1'
+            min='0'
+            max={duration ? duration : `${duration}`}
+            value={trackProgress}
+            onChange={e => onScrub(e.target.value)}
+            onMouseUp={onScrubEnd}
+            onKeyUp={onScrubEnd}
+            // style={{ "&:hover": {background: trackStyling} }}
+          />
+        </div>
       </div>
     </div>
   );
