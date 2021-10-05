@@ -2,51 +2,115 @@ import React, { useRef, useState, useEffect } from 'react';
 import audioFile from '../assets/sample-9s.mp3';
 import PlayPause from './PlayPause';
 
-const track = { audioSrc: audioFile, title: 'Best audio ever' };
 
-const formatTime = (seconds: number) => {
-  seconds = Math.floor(seconds);
-  if (seconds < 10) {
-    return `00:0${seconds}`;
-  } else if (seconds < 60) {
-    return `00:${seconds}`;
-  } else {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    if (minutes < 10 && seconds < 10) {
-      return `0${minutes}:0${seconds}`;
-    } else if (minutes < 10) {
-      return `0${minutes}:${seconds}`;
-    } else if (seconds < 10) {
-      return `${minutes}:0${seconds}`;
-    } else {
-      return `${minutes}:${seconds}`;
-    }
-  }
-};
 
 const Niggun = () => {
+  const track = { audioSrc: audioFile, title: 'Best audio ever' };
+  const formatTime = (seconds: number) => {
+    console.log(seconds);
+
+    seconds = Math.floor(seconds);
+    if (seconds < 10) {
+      return `00:0${seconds}`;
+    } else if (seconds < 60) {
+      return `00:${seconds}`;
+    } else {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      if (minutes < 10 && seconds < 10) {
+        return `0${minutes}:0${seconds}`;
+      } else if (minutes < 10) {
+        return `0${minutes}:${seconds}`;
+      } else if (seconds < 10) {
+        return `${minutes}:0${seconds}`;
+      } else {
+        return `${minutes}:${seconds}`;
+      }
+    }
+  };
+  if (typeof Audio === 'undefined') {
+    return <div></div>;
+  }
+
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const intervalRef = useRef();
+  const intervalRef = useRef<NodeJS.Timer>();
   const isReady = useRef(false);
-  const audioRef = useRef(
-    typeof Audio !== 'undefined' ? new Audio(track.audioSrc) : undefined
-  );
-  const duration = audioRef.current?.duration || 0;
+  const audioRef = useRef(new Audio(track.audioSrc));
+  const { duration } = audioRef.current;
+
+  const startTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      if (audioRef.current.ended) {
+        // My code
+        setIsPlaying(false);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      } else {
+        setTrackProgress(audioRef.current.currentTime);
+      }
+    }, 1000);
+  };
+  useEffect(() => {
+    audioRef.current.pause();
+    // setTrackProgress(0);
+
+    audioRef.current = new Audio(track.audioSrc);
+    setTrackProgress(audioRef.current.currentTime);
+
+    if (isReady.current) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      startTimer();
+    }
+  }, [trackIndex]);
 
   useEffect(() => {
     if (isPlaying) {
-      audioRef.current?.play();
+      audioRef.current.play();
+      startTimer();
     } else {
-      audioRef.current?.pause();
+      audioRef.current.pause();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     }
   }, [isPlaying]);
 
+  const onScrub = (value: string) => {
+    // Clear any timers already running
+    const numValue = parseInt(value);
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    audioRef.current.currentTime = numValue;
+    setTrackProgress(audioRef.current.currentTime);
+  };
+
+  const onScrubEnd = () => {
+    if (!isPlaying) {
+      setIsPlaying(true);
+    }
+    startTimer();
+  };
+
+//   const currentPercentage = duration
+//     ? `${(trackProgress / duration) * 100}%`
+//     : '0%';
+//   const trackStyling = `
+//   -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
+// `;
+
   return (
-    <div className='shadow mb-4 p-2'>
+    <div suppressHydrationWarning={true} className='shadow mb-4 p-2'>
       <div className='flex'>
         <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
         <span>{formatTime(duration)}</span>
@@ -54,7 +118,17 @@ const Niggun = () => {
       </div>
 
       <div>
-        <input type='range' min='0' />
+        <input
+          type='range'
+          step='0.1'
+          min='0'
+          max={duration ? duration : `${duration}`}
+          value={trackProgress}
+          onChange={e => onScrub(e.target.value)}
+          onMouseUp={onScrubEnd}
+          onKeyUp={onScrubEnd}
+          // style={{ "&:hover": {background: trackStyling} }}
+        />
       </div>
     </div>
   );
