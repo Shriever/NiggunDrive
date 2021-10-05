@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IoPlayOutline, IoPauseOutline } from 'react-icons/io5';
 
-const PlayPause = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+type Props = {
+  isPlaying: boolean;
+  onPlayPauseClick: (arg: boolean) => void;
+};
+
+const PlayPause = ({ isPlaying, onPlayPauseClick }: Props) => {
   return (
     <button
       onClick={() => {
-        setIsPlaying(!isPlaying);
+        onPlayPauseClick(!isPlaying);
       }}
       className='rounded'
     >
