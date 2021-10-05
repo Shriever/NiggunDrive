@@ -3,7 +3,7 @@ import { IoPlayOutline, IoPauseOutline } from 'react-icons/io5';
 
 type Props = {
   isPlaying: boolean;
-  onPlayPauseClick: (arg: boolean) => void;
+  onPlayPauseClick: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const PlayPause = ({ isPlaying, onPlayPauseClick }: Props) => {

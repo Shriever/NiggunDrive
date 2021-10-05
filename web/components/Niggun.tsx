@@ -37,15 +37,18 @@ const Niggun = () => {
   );
   const duration = audioRef.current?.duration || 0;
 
-  const onPlayPauseClick = (arg: boolean) => {
-
-  }
-
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current?.play();
+    } else {
+      audioRef.current?.pause();
+    }
+  }, [isPlaying]);
 
   return (
     <div className='shadow mb-4 p-2'>
       <div className='flex'>
-        <PlayPause isPlaying={isPlaying} onPlayPauseClick={onPlayPauseClick} />
+        <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
         <span>{formatTime(duration)}</span>
         <h4>{track.title}</h4>
       </div>
