@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import audioFile from '../assets/sample-9s.mp3';
 import PlayPause from './PlayPause';
-
-
 
 const Niggun = () => {
   const track = { audioSrc: audioFile, title: 'Best audio ever' };
@@ -102,22 +101,25 @@ const Niggun = () => {
     startTimer();
   };
 
-//   const currentPercentage = duration
-//     ? `${(trackProgress / duration) * 100}%`
-//     : '0%';
-//   const trackStyling = `
-//   -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
-// `;
+  //   const currentPercentage = duration
+  //     ? `${(trackProgress / duration) * 100}%`
+  //     : '0%';
+  //   const trackStyling = `
+  //   -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
+  // `;
 
   return (
     <div suppressHydrationWarning={true} className='shadow mb-4 p-2'>
-      <div className='flex'>
-        <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
-        <span>{formatTime(duration)}</span>
+      <div className='flex justify-between'>
+        <div className='flex'>
+          <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
         <h4>{track.title}</h4>
+        </div>
+        {true ? <IoHeartOutline /> : <IoHeart />}
       </div>
 
-      <div>
+      <div className='flex items-center'>
+        <span className='mr-2'>{formatTime(duration)}</span>
         <input
           type='range'
           step='0.1'
