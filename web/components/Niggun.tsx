@@ -3,10 +3,23 @@ import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import PlayPause from './PlayPause';
 import { Track } from './NiggunList';
 
-type Props = { track: Track, isPlaying: boolean };
+type Props = {
+  track: Track;
+  isPlaying: boolean;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  intervalRef: React.MutableRefObject<NodeJS.Timer | undefined>;
+  trackIndex: number;
+  setTrackIndex: React.Dispatch<React.SetStateAction<number>>;
+};
 
-const Niggun = ({ track, isPlaying }: Props) => {
-  // const track = { audioSrc: audioFile, title: 'Best audio ever' };
+const Niggun = ({
+  track,
+  isPlaying,
+  setIsPlaying,
+  intervalRef,
+  trackIndex,
+  setTrackIndex,
+}: Props) => {
   const formatTime = (seconds: number) => {
     console.log(seconds);
 
@@ -34,12 +47,9 @@ const Niggun = ({ track, isPlaying }: Props) => {
   }
 
   const [isLiked, setIsLiked] = useState(false);
-
-  const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
 
-  const intervalRef = useRef<NodeJS.Timer>();
-  const isReady = useRef(false);
+  // const isReady = useRef(false);
   const audioRef = useRef(new Audio(track.audioSrc));
   const { duration } = audioRef.current;
 
@@ -60,20 +70,6 @@ const Niggun = ({ track, isPlaying }: Props) => {
       }
     }, 1000);
   };
-  useEffect(() => {
-    audioRef.current.pause();
-    // setTrackProgress(0);
-
-    audioRef.current = new Audio(track.audioSrc);
-    setTrackProgress(audioRef.current.currentTime);
-
-    if (isReady.current) {
-      audioRef.current.play();
-      setIsPlaying(true);
-      startTimer();
-    }
-  }, [trackIndex]);
-
   useEffect(() => {
     if (isPlaying) {
       audioRef.current.play();
@@ -111,6 +107,11 @@ const Niggun = ({ track, isPlaying }: Props) => {
   //   -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
   // `;
 
+  const onPlayPauseClick = (isPlay: boolean) => {
+    setTrackIndex(trackIndex);
+    setIsPlaying(isPlay);
+  };
+
   const handleLike = () => {
     setIsLiked(true);
   };
@@ -123,7 +124,10 @@ const Niggun = ({ track, isPlaying }: Props) => {
       <div className='shadow mb-4 p-4'>
         <div className='flex justify-between'>
           <div className='flex'>
-            <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
+            <PlayPause
+              isPlaying={isPlaying}
+              onPlayPauseClick={onPlayPauseClick}
+            />
             <h4>{track.title}</h4>
           </div>
           {isLiked ? (
@@ -152,7 +156,7 @@ const Niggun = ({ track, isPlaying }: Props) => {
             onChange={e => onScrub(e.target.value)}
             onMouseUp={onScrubEnd}
             onKeyUp={onScrubEnd}
-            // style={{ "&:hover": {background: trackStyling} }}
+            // style={{ background: trackStyling }}
           />
         </div>
       </div>
