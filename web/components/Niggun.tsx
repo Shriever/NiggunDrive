@@ -1,44 +1,133 @@
-import React, { useRef } from 'react';
-import audioFile from '../assets/sample-9s.mp3';
+import React, { useRef, useState, useEffect } from 'react';
+import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import PlayPause from './PlayPause';
+import { Track } from './NiggunList';
+import { formatTime } from '../utils/formatTime';
 
-const formatTime = (seconds: number) => {
-  seconds = Math.floor(seconds);
-  if (seconds < 10) {
-    return `00:0${seconds}`;
-  } else if (seconds < 60) {
-    return `00:${seconds}`;
-  } else {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    if (minutes < 10 && seconds < 10) {
-      return `0${minutes}:0${seconds}`;
-    } else if (minutes < 10) {
-      return `0${minutes}:${seconds}`;
-    } else if (seconds < 10) {
-      return `${minutes}:0${seconds}`;
-    } else {
-      return `${minutes}:${seconds}`;
-    }
-  }
+type Props = {
+  track: Track;
+  isPlaying: boolean;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  trackIndex: number;
+  setTrackIndex: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const Niggun = () => {
-  const audioRef = useRef(
-    typeof Audio !== 'undefined' ? new Audio(audioFile) : undefined
-  );
-  const duration = audioRef.current?.duration || 0;
+const Niggun = ({
+  track,
+  isPlaying,
+  setIsPlaying,
+  trackIndex,
+  setTrackIndex,
+}: Props) => {
+  if (typeof Audio === 'undefined') {
+    return <div></div>;
+  }
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [trackProgress, setTrackProgress] = useState(0);
+
+  const audioRef = useRef(new Audio(track.audioSrc));
+  const intervalRef = useRef<NodeJS.Timer>();
+  const { duration } = audioRef.current;
+
+  const startTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      if (audioRef.current.ended) {
+        // My code
+        setIsPlaying(false);
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      } else {
+        setTrackProgress(audioRef.current.currentTime);
+      }
+    }, 1000);
+  };
+
+  useEffect(() => {
+    if (isPlaying) {
+      audioRef.current.play();
+      startTimer();
+    } else {
+      audioRef.current.pause();
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
+  }, [isPlaying]);
+
+  const onScrub = (value: string) => {
+    const numValue = parseInt(value);
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    audioRef.current.currentTime = numValue;
+    setTrackProgress(audioRef.current.currentTime);
+  };
+
+  const onScrubEnd = () => {
+    if (!isPlaying) {
+      setIsPlaying(true);
+    }
+    startTimer();
+  };
+
+  const onPlayPauseClick = (isPlay: boolean) => {
+    setTrackIndex(trackIndex);
+    setIsPlaying(isPlay);
+  };
+
+  const handleLike = () => {
+    setIsLiked(true);
+  };
+  const handleUnlike = () => {
+    setIsLiked(false);
+  };
 
   return (
-    <div className='shadow mb-4 p-2'>
-      <div className='flex'>
-        <PlayPause />
-        <span>{formatTime(duration)}</span>
-        <h4>Best Niggun</h4>
-      </div>
+    <div suppressHydrationWarning={true}>
+      <div className='shadow mb-4 p-4'>
+        <div className='flex justify-between'>
+          <div className='flex'>
+            <PlayPause
+              isPlaying={isPlaying}
+              onPlayPauseClick={onPlayPauseClick}
+            />
+            <h4>{track.title}</h4>
+          </div>
+          {isLiked ? (
+            <IoHeart
+              onClick={handleUnlike}
+              className='text-green-500 cursor-pointer transform hover:scale-110'
+              size={'1.6em'}
+            />
+          ) : (
+            <IoHeartOutline
+              onClick={handleLike}
+              className='text-green-500 cursor-pointer transform hover:scale-110'
+              size={'1.6em'}
+            />
+          )}
+        </div>
 
-      <div>
-        <input type='range' />
+        <div className='flex items-center'>
+          <span className='mr-2'>{formatTime(duration)}</span>
+          <input
+            type='range'
+            step='0.1'
+            min='0'
+            max={duration ? duration : `${duration}`}
+            value={trackProgress}
+            onChange={e => onScrub(e.target.value)}
+            onMouseUp={onScrubEnd}
+            onKeyUp={onScrubEnd}
+          />
+        </div>
       </div>
     </div>
   );
