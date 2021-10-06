@@ -13,10 +13,10 @@ const PlayPause = ({ isPlaying, onPlayPauseClick }: Props) => {
       onClick={() => {
         onPlayPauseClick(!isPlaying);
       }}
-      className='rounded-full bg-green-500 w-7 h-7 flex items-center justify-center text-white text-lg mr-2'
+      className='rounded-full bg-green-500 w-7 h-7 flex items-center justify-center text-white text-lg mr-2 transform hover:scale-110'
     >
       {isPlaying ? (
-        <IoPauseSharp className="pl-0.5" size={size} />
+        <IoPauseSharp size={size} />
       ) : (
         <IoPlaySharp className="pl-1" size={size} />
       )}

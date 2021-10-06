@@ -108,6 +108,10 @@ const Niggun = () => {
   //   -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
   // `;
 
+  const isLiked = false;
+  const handleLike = () => {};
+  const handleUnlike = () => {};
+
   return (
     <div suppressHydrationWarning={true}>
       <div className='shadow mb-4 p-4'>
@@ -116,7 +120,19 @@ const Niggun = () => {
             <PlayPause isPlaying={isPlaying} onPlayPauseClick={setIsPlaying} />
             <h4>{track.title}</h4>
           </div>
-          {true ? <IoHeartOutline /> : <IoHeart />}
+          {isLiked ? (
+            <IoHeart
+              onClick={handleUnlike}
+              className='text-green-500 cursor-pointer'
+              size={'1.6em'}
+            />
+          ) : (
+            <IoHeartOutline
+              onClick={handleLike}
+              className='text-green-500 cursor-pointer transform hover:scale-110'
+              size={'1.6em'}
+            />
+          )}
         </div>
 
         <div className='flex items-center'>
