@@ -12,8 +12,6 @@ const NiggunList = ({ tracks }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [trackIndex, setTrackIndex] = useState(0);
 
-  const intervalRef = useRef<NodeJS.Timer>();
-
   return (
     <div className='mx-auto max-w-sm md:max-w-xl mt-6'>
       {tracks.map((track, idx) => {
@@ -27,7 +25,6 @@ const NiggunList = ({ tracks }: Props) => {
             track={track}
             isPlaying={isCurrPlaying}
             setIsPlaying={setIsPlaying}
-            intervalRef={intervalRef}
             trackIndex={idx}
             setTrackIndex={setTrackIndex}
           />

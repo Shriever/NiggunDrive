@@ -2,12 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import PlayPause from './PlayPause';
 import { Track } from './NiggunList';
+import { formatTime } from '../utils/formatTime';
 
 type Props = {
   track: Track;
   isPlaying: boolean;
   setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  intervalRef: React.MutableRefObject<NodeJS.Timer | undefined>;
   trackIndex: number;
   setTrackIndex: React.Dispatch<React.SetStateAction<number>>;
 };
@@ -16,32 +16,9 @@ const Niggun = ({
   track,
   isPlaying,
   setIsPlaying,
-  intervalRef,
   trackIndex,
   setTrackIndex,
 }: Props) => {
-  const formatTime = (seconds: number) => {
-    console.log(seconds);
-
-    seconds = Math.floor(seconds);
-    if (seconds < 10) {
-      return `00:0${seconds}`;
-    } else if (seconds < 60) {
-      return `00:${seconds}`;
-    } else {
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-      if (minutes < 10 && seconds < 10) {
-        return `0${minutes}:0${seconds}`;
-      } else if (minutes < 10) {
-        return `0${minutes}:${seconds}`;
-      } else if (seconds < 10) {
-        return `${minutes}:0${seconds}`;
-      } else {
-        return `${minutes}:${seconds}`;
-      }
-    }
-  };
   if (typeof Audio === 'undefined') {
     return <div></div>;
   }
@@ -49,8 +26,8 @@ const Niggun = ({
   const [isLiked, setIsLiked] = useState(false);
   const [trackProgress, setTrackProgress] = useState(0);
 
-  // const isReady = useRef(false);
   const audioRef = useRef(new Audio(track.audioSrc));
+  const intervalRef = useRef<NodeJS.Timer>();
   const { duration } = audioRef.current;
 
   const startTimer = () => {
@@ -70,6 +47,7 @@ const Niggun = ({
       }
     }, 1000);
   };
+
   useEffect(() => {
     if (isPlaying) {
       audioRef.current.play();
@@ -83,7 +61,6 @@ const Niggun = ({
   }, [isPlaying]);
 
   const onScrub = (value: string) => {
-    // Clear any timers already running
     const numValue = parseInt(value);
 
     if (intervalRef.current) {
@@ -99,13 +76,6 @@ const Niggun = ({
     }
     startTimer();
   };
-
-  //   const currentPercentage = duration
-  //     ? `${(trackProgress / duration) * 100}%`
-  //     : '0%';
-  //   const trackStyling = `
-  //   -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
-  // `;
 
   const onPlayPauseClick = (isPlay: boolean) => {
     setTrackIndex(trackIndex);
@@ -156,7 +126,6 @@ const Niggun = ({
             onChange={e => onScrub(e.target.value)}
             onMouseUp={onScrubEnd}
             onKeyUp={onScrubEnd}
-            // style={{ background: trackStyling }}
           />
         </div>
       </div>
