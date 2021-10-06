@@ -1,10 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { IoHeartOutline, IoHeart } from 'react-icons/io5';
-import audioFile from '../assets/sample-9s.mp3';
 import PlayPause from './PlayPause';
+import { Track } from './NiggunList';
 
-const Niggun = () => {
-  const track = { audioSrc: audioFile, title: 'Best audio ever' };
+type Props = { track: Track, isPlaying: boolean };
+
+const Niggun = ({ track, isPlaying }: Props) => {
+  // const track = { audioSrc: audioFile, title: 'Best audio ever' };
   const formatTime = (seconds: number) => {
     console.log(seconds);
 
@@ -31,9 +33,10 @@ const Niggun = () => {
     return <div></div>;
   }
 
+  const [isLiked, setIsLiked] = useState(false);
+
   const [trackIndex, setTrackIndex] = useState(0);
   const [trackProgress, setTrackProgress] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const intervalRef = useRef<NodeJS.Timer>();
   const isReady = useRef(false);
@@ -108,9 +111,12 @@ const Niggun = () => {
   //   -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${currentPercentage}, #fff), color-stop(${currentPercentage}, #777))
   // `;
 
-  const isLiked = false;
-  const handleLike = () => {};
-  const handleUnlike = () => {};
+  const handleLike = () => {
+    setIsLiked(true);
+  };
+  const handleUnlike = () => {
+    setIsLiked(false);
+  };
 
   return (
     <div suppressHydrationWarning={true}>
@@ -123,7 +129,7 @@ const Niggun = () => {
           {isLiked ? (
             <IoHeart
               onClick={handleUnlike}
-              className='text-green-500 cursor-pointer'
+              className='text-green-500 cursor-pointer transform hover:scale-110'
               size={'1.6em'}
             />
           ) : (
