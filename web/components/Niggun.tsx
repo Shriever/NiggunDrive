@@ -61,6 +61,7 @@ const Niggun = ({
   }, [isPlaying]);
 
   const onScrub = (value: string) => {
+    setTrackIndex(trackIndex);
     const numValue = parseInt(value);
 
     if (intervalRef.current) {
