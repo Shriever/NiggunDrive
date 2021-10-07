@@ -1,5 +1,6 @@
 import { Formik } from 'formik';
 import React from 'react';
+import Header from '../components/Header';
 import Input from '../components/Input';
 import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
@@ -7,9 +8,9 @@ import Wrapper from '../components/Wrapper';
 const upload = () => {
   return (
     <Wrapper>
-      <h1 className='text-center text-3xl mt-5 mb-3 rounded font-semibold'>
+      <Header>
         Upload Niggun
-      </h1>
+      </Header>
       <Formik
         initialValues={{ title: '' }}
         onSubmit={() => {

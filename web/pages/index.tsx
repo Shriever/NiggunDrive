@@ -5,6 +5,8 @@ import Niggun from '../components/Niggun';
 import NiggunList, { Track } from '../components/NiggunList';
 import Wrapper from '../components/Wrapper';
 import audioFile from '../assets/sample-9s.mp3';
+import React from 'react';
+import Header from '../components/Header';
 
 const tracks: Track[] = [
   { title: 'best song ever1', audioSrc: audioFile },
@@ -21,9 +23,9 @@ const tracks: Track[] = [
 const Home: NextPage = () => {
   return (
     <Wrapper>
-      <h1 className='text-center text-3xl mt-5 mb-3 rounded font-semibold'>
+      <Header>
         Niggunim
-      </h1>
+      </Header>
       <NiggunList tracks={tracks} />
     </Wrapper>
   );
