@@ -26,7 +26,7 @@ const Navbar = () => {
                 {LOGGED_IN ? 'Logout' : 'Login'}
               </a>
             </Link>
-            <Link href='/'>
+            <Link href='/register'>
               <a
                 href='#'
                 className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'

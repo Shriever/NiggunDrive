@@ -9,7 +9,7 @@ import Wrapper from '../components/Wrapper';
 const login = () => {
   return (
     <Wrapper>
-      <Header>Login Page</Header>
+      <Header>Login</Header>
       <Formik
         initialValues={{ email: '', password: '' }}
         onSubmit={() => {
