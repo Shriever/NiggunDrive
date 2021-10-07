@@ -1,11 +1,12 @@
 import { Formik } from 'formik';
+import { NextPage } from 'next';
 import React from 'react';
 import Header from '../components/Header';
 import Input from '../components/Input';
 import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
 
-const register = () => {
+const register: NextPage = () => {
   return (
     <Wrapper>
       <Header>Register</Header>

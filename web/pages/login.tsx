@@ -1,4 +1,5 @@
 import { Formik } from 'formik';
+import { NextPage } from 'next';
 import React from 'react';
 import Header from '../components/Header';
 import Input from '../components/Input';
@@ -6,7 +7,7 @@ import MyForm from '../components/MyForm';
 import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
 
-const login = () => {
+const login: NextPage = () => {
   return (
     <Wrapper>
       <Header>Login</Header>
