@@ -23,7 +23,7 @@ const Navbar = () => {
             <Link href='/'>
               <a
                 href='#'
-                className='mx-2 py-4 px-2 text-green-500 border-green-500 font-semibold '
+                className='mx-2 py-4 px-2 text-gray-500 border-green-500 font-semibold hover:text-green-500'
                 // className='mx-2 py-4 px-2 text-green-500 border-b-4 border-green-500 font-semibold '
               >
                 Home
@@ -32,20 +32,20 @@ const Navbar = () => {
             <Link href='/liked-posts'>
               <a
                 href='#'
-                className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300'
+                className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300 hover:text-green-500'
               >
                 My Likes
               </a>
             </Link>
             <a
               href='#'
-              className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300'
+              className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300 hover:text-green-500'
             >
               Coming Soon
             </a>
             <a
               href='#'
-              className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300'
+              className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300 hover:text-green-500'
             >
               Coming Soon
             </a>
