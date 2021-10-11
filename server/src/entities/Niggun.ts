@@ -11,4 +11,5 @@ export class Niggun extends BaseEntity {
   @Field()
   @Column()
   title!: string;
+  
 }
