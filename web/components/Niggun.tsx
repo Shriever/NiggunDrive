@@ -100,7 +100,7 @@ const Niggun = ({
               isPlaying={isPlaying}
               onPlayPauseClick={onPlayPauseClick}
             />
-            <h4>{track.title}</h4>
+            <h4 className='text-lg'>{track.title}</h4>
           </div>
           {isLiked ? (
             <IoHeart
@@ -119,7 +119,9 @@ const Niggun = ({
 
         <div className='flex items-center'>
           <span className='mr-2'>
-            {isPlaying ? formatTime(trackProgress) : formatTime(duration)}
+            {isPlaying || trackProgress > 0
+              ? formatTime(trackProgress)
+              : formatTime(duration)}
           </span>
           <input
             type='range'

@@ -5,6 +5,7 @@ import { IoMenuOutline } from 'react-icons/io5';
 const LOGGED_IN = false;
 
 const Navbar = () => {
+
   return (
     <nav className='bg-white shadow-lg'>
       <div className='max-w-6xl mx-auto px-4'>
@@ -22,7 +23,8 @@ const Navbar = () => {
             <Link href='/'>
               <a
                 href='#'
-                className='mx-2 py-4 px-2 text-green-500 border-b-4 border-green-500 font-semibold '
+                className='mx-2 py-4 px-2 text-green-500 border-green-500 font-semibold '
+                // className='mx-2 py-4 px-2 text-green-500 border-b-4 border-green-500 font-semibold '
               >
                 Home
               </a>
@@ -66,8 +68,8 @@ const Navbar = () => {
               </a>
             </Link>
           </div>
-          <div className="md:hidden flex items-center cursor-pointer">
-            <IoMenuOutline size="1.3em" />
+          <div className='md:hidden flex items-center cursor-pointer'>
+            <IoMenuOutline size='1.3em' />
           </div>
         </div>
       </div>
