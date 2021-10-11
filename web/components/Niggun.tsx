@@ -25,6 +25,7 @@ const Niggun = ({
 
   const [isLiked, setIsLiked] = useState(false);
   const [trackProgress, setTrackProgress] = useState(0);
+  
 
   const audioRef = useRef(new Audio(track.audioSrc));
   const intervalRef = useRef<NodeJS.Timer>();
@@ -117,7 +118,9 @@ const Niggun = ({
         </div>
 
         <div className='flex items-center'>
-          <span className='mr-2'>{formatTime(duration)}</span>
+          <span className='mr-2'>
+            {isPlaying ? formatTime(trackProgress) : formatTime(duration)}
+          </span>
           <input
             type='range'
             step='0.1'
