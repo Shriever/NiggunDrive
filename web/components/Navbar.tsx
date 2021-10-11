@@ -37,18 +37,6 @@ const Navbar = () => {
                 My Likes
               </a>
             </Link>
-            <a
-              href='#'
-              className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300 hover:text-green-500'
-            >
-              Coming Soon
-            </a>
-            <a
-              href='#'
-              className='mx-2 py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300 hover:text-green-500'
-            >
-              Coming Soon
-            </a>
           </div>
           <div className='md:flex hidden items-center space-x-3'>
             <Link href='/login'>
