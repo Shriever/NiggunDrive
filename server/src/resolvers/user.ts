@@ -5,9 +5,11 @@ import {
   Mutation,
   ObjectType,
   Field,
+  Arg,
 } from 'type-graphql';
 import { MyContext } from '../types';
 import { User } from '../entities/User';
+import { UsernamePasswordInput } from './UsernamePasswordInput';
 
 @ObjectType()
 class FieldError {
@@ -39,4 +41,7 @@ export class UserResolver {
   }
 
   @Mutation(() => UserResponse)
+  async register(@Arg("options") options: UsernamePasswordInput, @Ctx() {req}: MyContext) {
+      const errors
+  }
 }
