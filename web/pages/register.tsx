@@ -6,26 +6,24 @@ import Input from '../components/Input';
 import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
 
-const upload: NextPage = () => {
+const register: NextPage = () => {
   return (
     <Wrapper>
-      <Header>
-        Upload Niggun
-      </Header>
+      <Header>Register</Header>
       <Formik
-        initialValues={{ title: '' }}
+        initialValues={{ email: '', password: '' }}
         onSubmit={() => {
-          console.log('File Uploaded!');
+          console.log('logging in...');
         }}
       >
         {props => (
           <form
             onSubmit={props.handleSubmit}
-            className='max-w-md xl:max-w-sm sm:shadow-xl mx-auto pt-2 mt-4 flex flex-col items-center p-6 py-8'
+            className='max-w-md xl:max-w-sm sm:shadow-xl mx-auto  pt-2 flex flex-col items-center p-6 py-8'
           >
-            <Input type='text' placeholder='Title' name='title' />
-            <input type='file' className='w-4/5 mx-auto my-3' />
-            <SubmitButton text='UPLOAD NOW' />
+            <Input type='email' placeholder='Email Address' name='email' />
+            <Input type='password' placeholder='Password' name='password' />
+            <SubmitButton text='REGISTER NOW' />
           </form>
         )}
       </Formik>
@@ -33,4 +31,4 @@ const upload: NextPage = () => {
   );
 };
 
-export default upload;
+export default register;

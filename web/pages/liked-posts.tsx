@@ -20,7 +20,7 @@ const tracks: Track[] = [
 const Home: NextPage = () => {
   return (
     <Wrapper>
-      <Header>Niggunim</Header>
+      <Header>My Liked Niggunim</Header>
       <NiggunList tracks={tracks} />
     </Wrapper>
   );

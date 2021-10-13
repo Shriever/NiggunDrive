@@ -25,6 +25,7 @@ const Niggun = ({
 
   const [isLiked, setIsLiked] = useState(false);
   const [trackProgress, setTrackProgress] = useState(0);
+  
 
   const audioRef = useRef(new Audio(track.audioSrc));
   const intervalRef = useRef<NodeJS.Timer>();
@@ -61,6 +62,7 @@ const Niggun = ({
   }, [isPlaying]);
 
   const onScrub = (value: string) => {
+    setTrackIndex(trackIndex);
     const numValue = parseInt(value);
 
     if (intervalRef.current) {
@@ -98,7 +100,7 @@ const Niggun = ({
               isPlaying={isPlaying}
               onPlayPauseClick={onPlayPauseClick}
             />
-            <h4>{track.title}</h4>
+            <h4 className='text-lg'>{track.title}</h4>
           </div>
           {isLiked ? (
             <IoHeart
@@ -116,7 +118,11 @@ const Niggun = ({
         </div>
 
         <div className='flex items-center'>
-          <span className='mr-2'>{formatTime(duration)}</span>
+          <span className='mr-2'>
+            {isPlaying || trackProgress > 0
+              ? formatTime(trackProgress)
+              : formatTime(duration)}
+          </span>
           <input
             type='range'
             step='0.1'
