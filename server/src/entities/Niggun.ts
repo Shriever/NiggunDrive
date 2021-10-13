@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Like } from './Like';
 
 @ObjectType()
 @Entity()
@@ -18,6 +20,12 @@ export class Niggun extends BaseEntity {
   @Field()
   @Column()
   title!: string;
+
+  @Field(() => Boolean)
+  isLiked: boolean;
+
+  @OneToMany(() => Like, like => like.niggun)
+  likes: Like[];
 
   @Field(() => String)
   @CreateDateColumn()

@@ -5,8 +5,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { ObjectType, Field, Int } from "type-graphql";
+  OneToMany,
+} from 'typeorm';
+import { ObjectType, Field, Int } from 'type-graphql';
+import { Like } from './Like';
 
 @ObjectType()
 @Entity()
@@ -16,11 +18,14 @@ export class User extends BaseEntity {
   id!: number;
 
   @Field()
-  @Column({ type: "text", unique: true })
+  @Column({ type: 'text', unique: true })
   email!: string;
 
   @Column()
   password!: string;
+
+  @OneToMany(() => Like, like => like.user)
+  likes: Like[];
 
   @Field(() => String)
   @CreateDateColumn()
