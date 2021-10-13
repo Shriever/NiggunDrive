@@ -1,20 +1,41 @@
 import { Formik } from 'formik';
 import { NextPage } from 'next';
+import router from 'next/router';
 import React from 'react';
 import Header from '../components/Header';
 import Input from '../components/Input';
-import MyForm from '../components/MyForm';
 import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
+import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
+import { toErrorMap } from '../utils/toErrorMap';
 
 const login: NextPage = () => {
+  const [login] = useLoginMutation();
+
   return (
     <Wrapper>
       <Header>Login</Header>
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={() => {
-          console.log('logging in...');
+        onSubmit={async (values, { setErrors }) => {
+          const response = await login({
+            variables: { options: values },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: 'Query',
+                  me: data?.login.user,
+                },
+              });
+              cache.evict({ fieldName: 'niggunim:{}' });
+            },
+          });
+          if (response.data?.login.errors) {
+            setErrors(toErrorMap(response.data.login.errors));
+          } else {
+            router.push('/');
+          }
         }}
       >
         {props => (
@@ -24,7 +45,7 @@ const login: NextPage = () => {
           >
             <Input type='email' placeholder='Email Address' name='email' />
             <Input type='password' placeholder='Password' name='password' />
-            <SubmitButton text='LOG IN NOW' />
+            <SubmitButton disabled={props.isSubmitting} text='LOG IN NOW' />
           </form>
         )}
       </Formik>
