@@ -6,12 +6,13 @@ import path from 'path';
 import session from 'express-session';
 import { COOKIE_NAME, __prod__ } from './constants';
 import { ApolloServer } from 'apollo-server-express';
-import { buildSchema } from 'graphql';
-import { createConnection, RelationId } from 'typeorm';
+import { buildSchema } from 'type-graphql';
+import { createConnection } from 'typeorm';
 import { User } from './entities/User';
 import { Niggun } from './entities/Niggun';
 import connectRedis from 'connect-redis';
-import redis from 'redis';
+import Redis from 'ioredis';
+import { TestResolver } from './resolvers/test';
 
 const main = async () => {
   const conn = await createConnection({
@@ -22,17 +23,26 @@ const main = async () => {
     migrations: [path.join(__dirname, './migrations/*')],
     entities: [User, Niggun],
   });
+  `${conn}`;
   const app = express();
 
   const RedisStore = connectRedis(session);
-  const redisClient = redis.createClient();
+  const redis = new Redis(process.env.REDIS_URL);
+  app.set('trust proxy', 1);
 
-  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+  // app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
+  app.use(
+    cors({
+      origin: 'https://studio.apollographql.com',
+      credentials: true,
+    })
+  );
 
   app.use(
     session({
       name: COOKIE_NAME,
-      store: new RedisStore({ client: redisClient, disableTouch: true }),
+      store: new RedisStore({ client: redis, disableTouch: true }),
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // 10 years
         httpOnly: true,
@@ -47,7 +57,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [],
+      resolvers: [TestResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
