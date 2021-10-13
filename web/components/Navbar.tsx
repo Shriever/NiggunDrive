@@ -1,10 +1,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { IoMenuOutline } from 'react-icons/io5';
+import { useMeQuery } from '../generated/graphql';
 
 const LOGGED_IN = false;
 
 const Navbar = () => {
+  const { data, loading } = useMeQuery();
+
+  const loggedIn = !!data?.me;
 
   return (
     <nav className='bg-white shadow-lg'>
@@ -39,22 +43,26 @@ const Navbar = () => {
             </Link>
           </div>
           <div className='md:flex hidden items-center space-x-3'>
-            <Link href='/login'>
+            <Link href={loggedIn ? '/' : '/login'}>
               <a
                 href='#'
                 className='py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300'
               >
-                {LOGGED_IN ? 'Logout' : 'Login'}
+                {loggedIn ? 'Logout' : 'Login'}
               </a>
             </Link>
-            <Link href='/register'>
-              <a
-                href='#'
-                className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
-              >
-                {LOGGED_IN ? 'Upload' : 'Register'}
-              </a>
-            </Link>
+            {loggedIn ? (
+              <span>{data?.me?.email}</span>
+            ) : (
+              <Link href='/register'>
+                <a
+                  href='#'
+                  className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
+                >
+                  Register
+                </a>
+              </Link>
+            )}
           </div>
           <div className='md:hidden flex items-center cursor-pointer'>
             <IoMenuOutline size='1.3em' />
