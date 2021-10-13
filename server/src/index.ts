@@ -13,6 +13,7 @@ import { Niggun } from './entities/Niggun';
 import connectRedis from 'connect-redis';
 import Redis from 'ioredis';
 import { TestResolver } from './resolvers/test';
+import { UserResolver } from './resolvers/user';
 
 const main = async () => {
   const conn = await createConnection({
@@ -57,12 +58,13 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [TestResolver],
+      resolvers: [TestResolver, UserResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
       req,
       res,
+      redis
     }),
   });
 
