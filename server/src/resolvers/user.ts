@@ -11,7 +11,7 @@ import { MyContext } from '../types';
 import { User } from '../entities/User';
 import { UsernamePasswordInput } from './UsernamePasswordInput';
 import { hash, verify } from 'argon2';
-import { COOKIE_NAME } from 'src/constants';
+import { COOKIE_NAME } from '../constants';
 
 @ObjectType()
 class FieldError {

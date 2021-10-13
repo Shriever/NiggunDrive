@@ -14,6 +14,7 @@ import connectRedis from 'connect-redis';
 import Redis from 'ioredis';
 import { TestResolver } from './resolvers/test';
 import { UserResolver } from './resolvers/user';
+import { Like } from './entities/Like';
 
 const main = async () => {
   const conn = await createConnection({
@@ -22,7 +23,7 @@ const main = async () => {
     synchronize: true,
     logging: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [User, Niggun],
+    entities: [User, Niggun, Like],
   });
   `${conn}`;
   const app = express();
