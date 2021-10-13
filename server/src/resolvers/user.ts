@@ -131,5 +131,19 @@ export class UserResolver {
     return { user };
   }
 
-  
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise(resolve => {
+      req.session.destroy(error => {
+        res.clearCookie(COOKIE_NAME);
+
+        if (error) {
+          resolve(false);
+          return;
+        }
+
+        resolve(true);
+      });
+    });
+  }
 }
