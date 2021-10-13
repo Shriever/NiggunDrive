@@ -1,6 +1,6 @@
 import { Formik } from 'formik';
 import { NextPage } from 'next';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import React from 'react';
 import Header from '../components/Header';
 import Input from '../components/Input';
@@ -10,6 +10,7 @@ import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 
 const login: NextPage = () => {
+  const router = useRouter();
   const [login] = useLoginMutation();
 
   return (
