@@ -10,7 +10,8 @@ import {
 import { MyContext } from '../types';
 import { User } from '../entities/User';
 import { UsernamePasswordInput } from './UsernamePasswordInput';
-import { hash } from 'argon2';
+import { hash, verify } from 'argon2';
+import { COOKIE_NAME } from 'src/constants';
 
 @ObjectType()
 class FieldError {
@@ -91,7 +92,44 @@ export class UserResolver {
         };
       }
     }
-    return { errors: [{field: 'register', message: 'An unknown error has occurred'}]};
-    }
+    return {
+      errors: [{ field: 'register', message: 'An unknown error has occurred' }],
+    };
   }
 
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg('options') options: UsernamePasswordInput,
+    @Ctx() { req }: MyContext
+  ): Promise<UserResponse> {
+    const { email, password } = options;
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      return {
+        errors: [
+          { field: 'login', message: 'Email and password are incorrect.' },
+        ],
+      };
+    }
+
+    const isValid = verify(user.password, password);
+
+    if (!isValid) {
+      return {
+        errors: [
+          { field: 'login', message: 'Email and password are incorrect.' },
+        ],
+      };
+    }
+
+    req.session.userId = user.id;
+
+    return { user };
+  }
+
+  
+}
