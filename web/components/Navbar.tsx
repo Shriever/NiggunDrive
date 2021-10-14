@@ -46,6 +46,7 @@ const Navbar = () => {
             </Link>
           </div>
           <div className='md:flex hidden items-center space-x-3'>
+            {loggedIn ? <span>{data?.me?.email}</span> : null}
             <Link href={loggedIn ? '/' : '/login'}>
               <a
                 href='#'
@@ -60,9 +61,17 @@ const Navbar = () => {
                 {loggedIn ? 'Logout' : 'Login'}
               </a>
             </Link>
-            {loggedIn ? (
-              <span>{data?.me?.email}</span>
-            ) : (
+            {data?.me?.isAdmin ? (
+              <Link href='/upload'>
+                <a
+                  href='#'
+                  className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
+                >
+                  Upload
+                </a>
+              </Link>
+            ) : null}
+            {!loggedIn ? (
               <Link href='/register'>
                 <a
                   href='#'
@@ -71,7 +80,7 @@ const Navbar = () => {
                   Register
                 </a>
               </Link>
-            )}
+            ) : null}
           </div>
           <div className='md:hidden flex items-center cursor-pointer'>
             <IoMenuOutline size='1.3em' />

@@ -68,6 +68,7 @@ export type User = {
   createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Int'];
+  isAdmin: Scalars['Boolean'];
   updatedAt: Scalars['String'];
 };
 
@@ -105,7 +106,7 @@ export type RegisterMutation = { __typename?: 'Mutation', register: { __typename
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, id: number } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, id: number, isAdmin: boolean } | null | undefined };
 
 
 export const LoginDocument = gql`
@@ -224,6 +225,7 @@ export const MeDocument = gql`
   me {
     email
     id
+    isAdmin
   }
 }
     `;
