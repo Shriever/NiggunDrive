@@ -4,8 +4,6 @@ import { IoMenuOutline } from 'react-icons/io5';
 import { useLogoutMutation, useMeQuery } from '../generated/graphql';
 import { useApolloClient } from '@apollo/client';
 
-const LOGGED_IN = false;
-
 const Navbar = () => {
   const { data, loading } = useMeQuery();
   const [logout] = useLogoutMutation();
@@ -61,26 +59,14 @@ const Navbar = () => {
                 {loggedIn ? 'Logout' : 'Login'}
               </a>
             </Link>
-            {data?.me?.isAdmin ? (
-              <Link href='/upload'>
-                <a
-                  href='#'
-                  className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
-                >
-                  Upload
-                </a>
-              </Link>
-            ) : null}
-            {!loggedIn ? (
-              <Link href='/register'>
-                <a
-                  href='#'
-                  className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
-                >
-                  Register
-                </a>
-              </Link>
-            ) : null}
+            <Link href={loggedIn ? '/upload' : '/register'}>
+              <a
+                href='#'
+                className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
+              >
+                {loggedIn ? 'Upload' : 'Register'}
+              </a>
+            </Link>
           </div>
           <div className='md:hidden flex items-center cursor-pointer'>
             <IoMenuOutline size='1.3em' />

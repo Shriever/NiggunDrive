@@ -6,12 +6,17 @@ import Header from '../components/Header';
 import Input from '../components/Input';
 import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
-import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
+import {
+  MeDocument,
+  MeQuery,
+  useLoginMutation,
+} from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 
 const login: NextPage = () => {
   const router = useRouter();
   const [login] = useLoginMutation();
+
 
   return (
     <Wrapper>
@@ -58,7 +63,11 @@ const login: NextPage = () => {
               name='password'
               onChange={handleChange}
             />
-            {errors ? <span className="text-red-500">{errors.email || errors.password}</span> : null}
+            {errors ? (
+              <span className='text-red-500'>
+                {errors.email || errors.password}
+              </span>
+            ) : null}
             <SubmitButton disabled={isSubmitting} text='LOG IN NOW' />
           </form>
         )}
