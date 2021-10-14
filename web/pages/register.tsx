@@ -42,7 +42,7 @@ const register: NextPage = () => {
           }
         }}
       >
-        {({ handleSubmit, handleChange, values, isSubmitting }) => (
+        {({ handleSubmit, handleChange, values, isSubmitting, errors }) => (
           <form
             onSubmit={handleSubmit}
             className='max-w-md xl:max-w-sm sm:shadow-xl mx-auto  pt-2 flex flex-col items-center p-6 py-8'
@@ -55,12 +55,17 @@ const register: NextPage = () => {
               onChange={handleChange}
             />
             <Input
-              value={values.email}
+              value={values.password}
               type='password'
               placeholder='Password'
               name='password'
               onChange={handleChange}
             />
+            {errors ? (
+              <span className='text-red-500'>
+                {errors.email || errors.password}
+              </span>
+            ) : null}
             <SubmitButton disabled={isSubmitting} text='REGISTER NOW' />
           </form>
         )}

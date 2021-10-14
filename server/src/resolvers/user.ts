@@ -48,6 +48,7 @@ export class UserResolver {
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const { email, password } = options;
+
     if (email.length < 3) {
       return {
         errors: [
@@ -93,7 +94,7 @@ export class UserResolver {
       }
     }
     return {
-      errors: [{ field: 'register', message: 'An unknown error has occurred' }],
+      errors: [{ field: 'password', message: 'An unknown error has occurred' }],
     };
   }
 
@@ -111,17 +112,17 @@ export class UserResolver {
     if (!user) {
       return {
         errors: [
-          { field: 'login', message: 'Email and password are incorrect.' },
+          { field: 'password', message: 'Email and password are incorrect.' },
         ],
       };
     }
 
-    const isValid = verify(user.password, password);
+    const isValid = await verify(user.password, password);
 
     if (!isValid) {
       return {
         errors: [
-          { field: 'login', message: 'Email and password are incorrect.' },
+          { field: 'password', message: 'Email and password are incorrect.' },
         ],
       };
     }
