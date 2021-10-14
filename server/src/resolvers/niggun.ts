@@ -1,19 +1,28 @@
-import { Niggun } from '../entities/Niggun';
 import {
   Arg,
   Field,
   InputType,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
   UseMiddleware,
 } from 'type-graphql';
+import { Niggun } from '../entities/Niggun';
 import { isAuth } from '../middleware/isAuth';
+import { configureS3 } from '../utils/configureS3';
+import { generateRandomString } from '../utils/generateRandomString';
 
 @InputType()
 class NiggunInput {
   @Field()
   title: string;
+}
+
+@ObjectType()
+class AwsUrl {
+  @Field()
+  uploadUrl: string;
 }
 
 @Resolver(Niggun)
@@ -41,6 +50,24 @@ export class NiggunResolver {
     const niggunim = await Niggun.find();
 
     return niggunim;
+  }
+
+  @Query(() => AwsUrl)
+  @UseMiddleware(isAuth)
+  async getAWSUploadUrl(): Promise<AwsUrl> {
+    const imageName = await generateRandomString();
+    const bucketName = 'niggunbucket';
+    const s3 = configureS3();
+
+    const params = {
+      Bucket: bucketName,
+      Key: imageName,
+      Expires: 60,
+    };
+
+    const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
+
+    return { uploadUrl };
   }
 
   @Mutation(() => Niggun)
