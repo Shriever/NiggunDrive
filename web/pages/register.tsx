@@ -8,16 +8,20 @@ import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
+import { ValuesOfCorrectTypeRule } from 'graphql';
 
 const register: NextPage = () => {
   const router = useRouter();
   const [register] = useRegisterMutation();
+
   return (
     <Wrapper>
       <Header>Register</Header>
       <Formik
         initialValues={{ email: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
+          console.log(values);
+
           const response = await register({
             variables: values,
             update: (cache, { data }) => {
@@ -38,14 +42,26 @@ const register: NextPage = () => {
           }
         }}
       >
-        {props => (
+        {({ handleSubmit, handleChange, values, isSubmitting }) => (
           <form
-            onSubmit={props.handleSubmit}
+            onSubmit={handleSubmit}
             className='max-w-md xl:max-w-sm sm:shadow-xl mx-auto  pt-2 flex flex-col items-center p-6 py-8'
           >
-            <Input type='email' placeholder='Email Address' name='email' />
-            <Input type='password' placeholder='Password' name='password' />
-            <SubmitButton disabled={props.isSubmitting} text='REGISTER NOW' />
+            <Input
+              value={values.email}
+              type='email'
+              placeholder='Email Address'
+              name='email'
+              onChange={handleChange}
+            />
+            <Input
+              value={values.email}
+              type='password'
+              placeholder='Password'
+              name='password'
+              onChange={handleChange}
+            />
+            <SubmitButton disabled={isSubmitting} text='REGISTER NOW' />
           </form>
         )}
       </Formik>

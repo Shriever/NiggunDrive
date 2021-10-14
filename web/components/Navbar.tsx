@@ -1,12 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
 import { IoMenuOutline } from 'react-icons/io5';
-import { useMeQuery } from '../generated/graphql';
+import { useLogoutMutation, useMeQuery } from '../generated/graphql';
+import { useApolloClient } from '@apollo/client';
 
 const LOGGED_IN = false;
 
 const Navbar = () => {
   const { data, loading } = useMeQuery();
+  const [logout] = useLogoutMutation();
+  const apolloClient = useApolloClient();
 
   const loggedIn = !!data?.me;
 
@@ -47,6 +50,12 @@ const Navbar = () => {
               <a
                 href='#'
                 className='py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300'
+                onClick={async () => {
+                  if (loggedIn) {
+                    await logout();
+                    await apolloClient.resetStore();
+                  }
+                }}
               >
                 {loggedIn ? 'Logout' : 'Login'}
               </a>
