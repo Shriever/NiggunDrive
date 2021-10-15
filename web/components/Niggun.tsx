@@ -27,9 +27,9 @@ const Niggun = ({
   const [trackProgress, setTrackProgress] = useState(0);
   
 
-  const audioRef = useRef(new Audio(track.audioSrc));
+  const audioRef = useRef(new Audio(track.link));
   const intervalRef = useRef<NodeJS.Timer>();
-  const { duration } = audioRef.current;
+  // const { duration } = audioRef.current;
 
   const startTimer = () => {
     if (intervalRef.current) {
@@ -121,13 +121,13 @@ const Niggun = ({
           <span className='mr-2'>
             {isPlaying || trackProgress > 0
               ? formatTime(trackProgress)
-              : formatTime(duration)}
+              : formatTime(track.length)}
           </span>
           <input
             type='range'
             step='0.1'
             min='0'
-            max={duration ? duration : `${duration}`}
+            max={track.length}
             value={trackProgress}
             onChange={e => onScrub(e.target.value)}
             onMouseUp={onScrubEnd}

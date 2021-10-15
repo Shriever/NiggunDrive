@@ -135,6 +135,11 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, id: number } | null | undefined };
 
+export type NiggunimQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NiggunimQuery = { __typename?: 'Query', niggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number }> };
+
 
 export const LoginDocument = gql`
     mutation Login($options: UsernamePasswordInput!) {
@@ -358,3 +363,40 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const NiggunimDocument = gql`
+    query Niggunim {
+  niggunim {
+    id
+    title
+    link
+    length
+  }
+}
+    `;
+
+/**
+ * __useNiggunimQuery__
+ *
+ * To run a query within a React component, call `useNiggunimQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNiggunimQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNiggunimQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNiggunimQuery(baseOptions?: Apollo.QueryHookOptions<NiggunimQuery, NiggunimQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NiggunimQuery, NiggunimQueryVariables>(NiggunimDocument, options);
+      }
+export function useNiggunimLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NiggunimQuery, NiggunimQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NiggunimQuery, NiggunimQueryVariables>(NiggunimDocument, options);
+        }
+export type NiggunimQueryHookResult = ReturnType<typeof useNiggunimQuery>;
+export type NiggunimLazyQueryHookResult = ReturnType<typeof useNiggunimLazyQuery>;
+export type NiggunimQueryResult = Apollo.QueryResult<NiggunimQuery, NiggunimQueryVariables>;

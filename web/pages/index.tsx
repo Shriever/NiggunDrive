@@ -1,27 +1,22 @@
 import type { NextPage } from 'next';
 import NiggunList, { Track } from '../components/NiggunList';
 import Wrapper from '../components/Wrapper';
-import audioFile from '../assets/sample-9s.mp3';
 import React from 'react';
 import Header from '../components/Header';
-
-const tracks: Track[] = [
-  { title: 'best song ever1', audioSrc: audioFile },
-  { title: 'best song ever2', audioSrc: audioFile },
-  { title: 'best song ever3', audioSrc: audioFile },
-  { title: 'best song ever3', audioSrc: audioFile },
-  { title: 'best song ever3', audioSrc: audioFile },
-  { title: 'best song ever3', audioSrc: audioFile },
-  { title: 'best song ever3', audioSrc: audioFile },
-  { title: 'best song ever3', audioSrc: audioFile },
-  { title: 'best song ever3', audioSrc: audioFile },
-];
+import { useNiggunimQuery } from '../generated/graphql';
 
 const Home: NextPage = () => {
+  const { data, loading } = useNiggunimQuery();
+
+  if (loading) {
+    return <div></div>;
+  } else if (!data) {
+    return <div>Something went wrong. Please try again.</div>;
+  }
   return (
     <Wrapper>
       <Header>Niggunim</Header>
-      <NiggunList tracks={tracks} />
+      <NiggunList tracks={data.niggunim} />
     </Wrapper>
   );
 };
