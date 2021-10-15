@@ -26,7 +26,11 @@ const upload: NextPage = () => {
             return;
           }
           if (data) {
-            fetch(data.getAWSUploadUrl.uploadUrl);
+            fetch(data.getAWSUploadUrl.uploadUrl, {
+              method: 'PUT',
+              headers: { 'Content-type': 'multipart/form-data' },
+              body: audioFile,
+            });
           }
         }}
       >
