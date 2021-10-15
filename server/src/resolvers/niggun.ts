@@ -21,6 +21,9 @@ class NiggunInput {
 
   @Field()
   link: string;
+
+  @Field()
+  length: number;
 }
 
 @ObjectType()

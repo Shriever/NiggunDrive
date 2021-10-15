@@ -37,7 +37,6 @@ const upload: NextPage = () => {
             console.log(audioUrl);
             const audio = new Audio(audioUrl);
             audio.play();
-            // const file = await fetch(audioUrl).then(res => res.json());
 
             // URL.createObjectURL(file)
           }
