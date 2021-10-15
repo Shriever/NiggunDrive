@@ -118,12 +118,12 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', email: string, id: number } | null | undefined } };
 
-export type UploadNiggunMutationMutationVariables = Exact<{
+export type UploadNiggunMutationVariables = Exact<{
   input: NiggunInput;
 }>;
 
 
-export type UploadNiggunMutationMutation = { __typename?: 'Mutation', uploadNiggun: { __typename?: 'NiggunResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, niggun?: { __typename?: 'Niggun', id: number, title: string, link: string, length: number } | null | undefined } };
+export type UploadNiggunMutation = { __typename?: 'Mutation', uploadNiggun: { __typename?: 'NiggunResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, niggun?: { __typename?: 'Niggun', id: number, title: string, link: string, length: number } | null | undefined } };
 
 export type GetAwsUploadUrlQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -247,8 +247,8 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
-export const UploadNiggunMutationDocument = gql`
-    mutation UploadNiggunMutation($input: NiggunInput!) {
+export const UploadNiggunDocument = gql`
+    mutation UploadNiggun($input: NiggunInput!) {
   uploadNiggun(input: $input) {
     errors {
       field
@@ -263,32 +263,32 @@ export const UploadNiggunMutationDocument = gql`
   }
 }
     `;
-export type UploadNiggunMutationMutationFn = Apollo.MutationFunction<UploadNiggunMutationMutation, UploadNiggunMutationMutationVariables>;
+export type UploadNiggunMutationFn = Apollo.MutationFunction<UploadNiggunMutation, UploadNiggunMutationVariables>;
 
 /**
- * __useUploadNiggunMutationMutation__
+ * __useUploadNiggunMutation__
  *
- * To run a mutation, you first call `useUploadNiggunMutationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUploadNiggunMutationMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUploadNiggunMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadNiggunMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [uploadNiggunMutationMutation, { data, loading, error }] = useUploadNiggunMutationMutation({
+ * const [uploadNiggunMutation, { data, loading, error }] = useUploadNiggunMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUploadNiggunMutationMutation(baseOptions?: Apollo.MutationHookOptions<UploadNiggunMutationMutation, UploadNiggunMutationMutationVariables>) {
+export function useUploadNiggunMutation(baseOptions?: Apollo.MutationHookOptions<UploadNiggunMutation, UploadNiggunMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadNiggunMutationMutation, UploadNiggunMutationMutationVariables>(UploadNiggunMutationDocument, options);
+        return Apollo.useMutation<UploadNiggunMutation, UploadNiggunMutationVariables>(UploadNiggunDocument, options);
       }
-export type UploadNiggunMutationMutationHookResult = ReturnType<typeof useUploadNiggunMutationMutation>;
-export type UploadNiggunMutationMutationResult = Apollo.MutationResult<UploadNiggunMutationMutation>;
-export type UploadNiggunMutationMutationOptions = Apollo.BaseMutationOptions<UploadNiggunMutationMutation, UploadNiggunMutationMutationVariables>;
+export type UploadNiggunMutationHookResult = ReturnType<typeof useUploadNiggunMutation>;
+export type UploadNiggunMutationResult = Apollo.MutationResult<UploadNiggunMutation>;
+export type UploadNiggunMutationOptions = Apollo.BaseMutationOptions<UploadNiggunMutation, UploadNiggunMutationVariables>;
 export const GetAwsUploadUrlDocument = gql`
     query GetAWSUploadUrl {
   getAWSUploadUrl {

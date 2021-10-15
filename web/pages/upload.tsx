@@ -1,15 +1,21 @@
 import { Formik } from 'formik';
 import { NextPage } from 'next';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import Input from '../components/Input';
 import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
-import { useGetAwsUploadUrlQuery } from '../generated/graphql';
+import {
+  useGetAwsUploadUrlQuery,
+  useUploadNiggunMutation,
+} from '../generated/graphql';
+import { toErrorMap } from '../utils/toErrorMap';
 
 const upload: NextPage = () => {
   const { data, loading } = useGetAwsUploadUrlQuery();
+  const [uploadNiggun] = useUploadNiggunMutation();
   const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [alertMessage, setAlertMessage] = useState('');
 
   return (
     <Wrapper>
@@ -34,11 +40,28 @@ const upload: NextPage = () => {
             });
 
             const audioUrl = uploadUrl.split('?')[0];
-            console.log(audioUrl);
             const audio = new Audio(audioUrl);
-            audio.play();
 
-            // URL.createObjectURL(file)
+            const response = await uploadNiggun({
+              variables: {
+                input: {
+                  link: audioUrl,
+                  length: audio.duration,
+                  title: values.title,
+                },
+              },
+              // update: (cache, {data}) => {
+              //   cache.writeQuery>()
+              // }
+            });
+            if (response.data?.uploadNiggun.errors) {
+              setErrors(toErrorMap(response.data.uploadNiggun.errors));
+            } else {
+              setAlertMessage('Niggun successfully uploaded!');
+              setTimeout(() => {
+                setAlertMessage('');
+              }, 4000);
+            }
           }
         }}
       >
@@ -61,17 +84,13 @@ const upload: NextPage = () => {
                 const { files } = e.target;
                 if (files && files[0]?.type === 'audio/mpeg') {
                   setAudioFile(files[0]);
-                  console.log(files[0]);
-
-                  // SECRET SAUCE
-                  // const audioUrl = URL.createObjectURL(files[0]);
-                  // const audio = new Audio(audioUrl);
                 }
               }}
             />
             {errors ? (
               <span className='text-red-500'>{errors.title}</span>
             ) : null}
+            {alertMessage ? <span>{alertMessage}</span> : null}
             <SubmitButton disabled={loading} text='UPLOAD NOW' />
           </form>
         )}

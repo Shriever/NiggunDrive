@@ -1,4 +1,4 @@
-mutation UploadNiggunMutation($input: NiggunInput!) {
+mutation UploadNiggun($input: NiggunInput!) {
   uploadNiggun(input: $input) {
     errors {
       field
