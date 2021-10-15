@@ -14,6 +14,11 @@ export type Scalars = {
   Float: number;
 };
 
+export type AwsUrl = {
+  __typename?: 'AwsUrl';
+  uploadUrl: Scalars['String'];
+};
+
 export type FieldError = {
   __typename?: 'FieldError';
   field: Scalars['String'];
@@ -58,6 +63,7 @@ export type NiggunInput = {
 
 export type Query = {
   __typename?: 'Query';
+  getAWSUploadUrl: AwsUrl;
   hello: Scalars['String'];
   me?: Maybe<User>;
   niggunim: Array<Niggun>;
@@ -101,6 +107,11 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', email: string, id: number } | null | undefined } };
+
+export type GetAwsUploadUrlQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAwsUploadUrlQuery = { __typename?: 'Query', getAWSUploadUrl: { __typename?: 'AwsUrl', uploadUrl: string } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -219,6 +230,40 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const GetAwsUploadUrlDocument = gql`
+    query GetAWSUploadUrl {
+  getAWSUploadUrl {
+    uploadUrl
+  }
+}
+    `;
+
+/**
+ * __useGetAwsUploadUrlQuery__
+ *
+ * To run a query within a React component, call `useGetAwsUploadUrlQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAwsUploadUrlQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAwsUploadUrlQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAwsUploadUrlQuery(baseOptions?: Apollo.QueryHookOptions<GetAwsUploadUrlQuery, GetAwsUploadUrlQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAwsUploadUrlQuery, GetAwsUploadUrlQueryVariables>(GetAwsUploadUrlDocument, options);
+      }
+export function useGetAwsUploadUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAwsUploadUrlQuery, GetAwsUploadUrlQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAwsUploadUrlQuery, GetAwsUploadUrlQueryVariables>(GetAwsUploadUrlDocument, options);
+        }
+export type GetAwsUploadUrlQueryHookResult = ReturnType<typeof useGetAwsUploadUrlQuery>;
+export type GetAwsUploadUrlLazyQueryHookResult = ReturnType<typeof useGetAwsUploadUrlLazyQuery>;
+export type GetAwsUploadUrlQueryResult = Apollo.QueryResult<GetAwsUploadUrlQuery, GetAwsUploadUrlQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
