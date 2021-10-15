@@ -41,6 +41,9 @@ const upload: NextPage = () => {
 
             const audioUrl = uploadUrl.split('?')[0];
             const audio = new Audio(audioUrl);
+            await new Promise(resolve => {
+              setTimeout(resolve, 1000);
+            });
 
             const response = await uploadNiggun({
               variables: {
@@ -54,6 +57,7 @@ const upload: NextPage = () => {
               //   cache.writeQuery>()
               // }
             });
+            
             if (response.data?.uploadNiggun.errors) {
               setErrors(toErrorMap(response.data.uploadNiggun.errors));
             } else {

@@ -33,14 +33,14 @@ const main = async () => {
   const redis = new Redis(process.env.REDIS_URL);
   app.set('trust proxy', 1);
 
-  // app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
-  app.use(
-    cors({
-      origin: 'https://studio.apollographql.com',
-      credentials: true,
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: 'https://studio.apollographql.com',
+  //     credentials: true,
+  //   })
+  // );
 
   app.use(
     session({
@@ -81,7 +81,7 @@ const main = async () => {
   app.listen(PORT, () => {
     console.log('listening on port ' + PORT);
   });
-};
+};;
 
 main().catch(err => {
   console.error(err);

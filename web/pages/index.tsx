@@ -10,7 +10,7 @@ const Home: NextPage = () => {
 
   if (loading) {
     return <div></div>;
-  } else if (!data) {
+  } else if (!data?.niggunim) {
     return <div>Something went wrong. Please try again.</div>;
   }
   return (
