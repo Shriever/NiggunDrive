@@ -12,6 +12,7 @@ import { Niggun } from '../entities/Niggun';
 import { isAuth } from '../middleware/isAuth';
 import { configureS3 } from '../utils/configureS3';
 import { generateRandomString } from '../utils/generateRandomString';
+import { FieldError } from './user';
 
 @InputType()
 class NiggunInput {
@@ -26,6 +27,15 @@ class NiggunInput {
 class AwsUrl {
   @Field()
   uploadUrl: string;
+}
+
+@ObjectType()
+class NiggunResponse {
+  @Field(() => [FieldError], { nullable: true })
+  errors?: FieldError[];
+
+  @Field(() => Niggun, { nullable: true })
+  niggun?: Niggun;
 }
 
 @Resolver(Niggun)
@@ -73,9 +83,17 @@ export class NiggunResolver {
     return { uploadUrl };
   }
 
-  @Mutation(() => Niggun)
+  @Mutation(() => NiggunResponse)
   @UseMiddleware(isAuth)
-  uploadNiggun(@Arg('input') input: NiggunInput) {
-    return Niggun.create(input);
+  async uploadNiggun(
+    @Arg('input') input: NiggunInput
+  ): Promise<NiggunResponse> {
+    try {
+      const niggun = await Niggun.create(input).save();
+
+      return { niggun };
+    } catch {
+      return { errors: [{ field: 'title', message: 'Title already exists.' }] };
+    }
   }
 }

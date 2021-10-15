@@ -14,7 +14,7 @@ import { hash, verify } from 'argon2';
 import { COOKIE_NAME } from '../constants';
 
 @ObjectType()
-class FieldError {
+export class FieldError {
   @Field()
   field: string;
 
