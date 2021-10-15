@@ -41,6 +41,8 @@ const upload: NextPage = () => {
 
             const audioUrl = uploadUrl.split('?')[0];
             const audio = new Audio(audioUrl);
+
+            // Wait for audio to load
             await new Promise(resolve => {
               setTimeout(resolve, 1000);
             });
@@ -49,7 +51,7 @@ const upload: NextPage = () => {
               variables: {
                 input: {
                   link: audioUrl,
-                  length: audio.duration,
+                  length: Math.ceil(audio.duration),
                   title: values.title,
                 },
               },
@@ -57,7 +59,7 @@ const upload: NextPage = () => {
               //   cache.writeQuery>()
               // }
             });
-            
+
             if (response.data?.uploadNiggun.errors) {
               setErrors(toErrorMap(response.data.uploadNiggun.errors));
             } else {
