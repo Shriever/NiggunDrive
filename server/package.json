@@ -6,6 +6,7 @@
   "dependencies": {
     "apollo-server-express": "^3.4.0",
     "argon2": "^0.28.2",
+    "aws-sdk": "^2.1008.0",
     "connect-redis": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

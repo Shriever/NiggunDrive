@@ -14,6 +14,8 @@ import connectRedis from 'connect-redis';
 import Redis from 'ioredis';
 import { TestResolver } from './resolvers/test';
 import { UserResolver } from './resolvers/user';
+import { Like } from './entities/Like';
+import { NiggunResolver } from './resolvers/niggun';
 
 const main = async () => {
   const conn = await createConnection({
@@ -22,7 +24,7 @@ const main = async () => {
     synchronize: true,
     logging: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [User, Niggun],
+    entities: [User, Niggun, Like],
   });
   `${conn}`;
   const app = express();
@@ -31,14 +33,14 @@ const main = async () => {
   const redis = new Redis(process.env.REDIS_URL);
   app.set('trust proxy', 1);
 
-  // app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
-  app.use(
-    cors({
-      origin: 'https://studio.apollographql.com',
-      credentials: true,
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: 'https://studio.apollographql.com',
+  //     credentials: true,
+  //   })
+  // );
 
   app.use(
     session({
@@ -58,13 +60,13 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [TestResolver, UserResolver],
+      resolvers: [TestResolver, UserResolver, NiggunResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
       req,
       res,
-      redis
+      redis,
     }),
   });
 

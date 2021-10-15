@@ -1,10 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
 import { IoMenuOutline } from 'react-icons/io5';
-
-const LOGGED_IN = false;
+import { useLogoutMutation, useMeQuery } from '../generated/graphql';
+import { useApolloClient } from '@apollo/client';
 
 const Navbar = () => {
+  const { data, loading } = useMeQuery();
+  const [logout] = useLogoutMutation();
+  const apolloClient = useApolloClient();
+
+  const loggedIn = !!data?.me;
 
   return (
     <nav className='bg-white shadow-lg'>
@@ -39,20 +44,27 @@ const Navbar = () => {
             </Link>
           </div>
           <div className='md:flex hidden items-center space-x-3'>
-            <Link href='/login'>
+            {loggedIn ? <span>{data?.me?.email}</span> : null}
+            <Link href={loggedIn ? '/' : '/login'}>
               <a
                 href='#'
                 className='py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300'
+                onClick={async () => {
+                  if (loggedIn) {
+                    await logout();
+                    await apolloClient.resetStore();
+                  }
+                }}
               >
-                {LOGGED_IN ? 'Logout' : 'Login'}
+                {loggedIn ? 'Logout' : 'Login'}
               </a>
             </Link>
-            <Link href='/register'>
+            <Link href={loggedIn ? '/upload' : '/register'}>
               <a
                 href='#'
                 className='py-2 px-2 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
               >
-                {LOGGED_IN ? 'Upload' : 'Register'}
+                {loggedIn ? 'Upload' : 'Register'}
               </a>
             </Link>
           </div>
