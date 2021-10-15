@@ -17,6 +17,9 @@ import { generateRandomString } from '../utils/generateRandomString';
 class NiggunInput {
   @Field()
   title: string;
+
+  @Field()
+  link: string;
 }
 
 @ObjectType()
@@ -73,6 +76,6 @@ export class NiggunResolver {
   @Mutation(() => Niggun)
   @UseMiddleware(isAuth)
   uploadNiggun(@Arg('input') input: NiggunInput) {
-    return Niggun.create({ ...input });
+    return Niggun.create(input);
   }
 }

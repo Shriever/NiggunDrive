@@ -21,6 +21,10 @@ export class Niggun extends BaseEntity {
   @Column()
   title!: string;
 
+  @Field()
+  @Column()
+  link!: string;
+
   @Field(() => Boolean)
   isLiked: boolean;
 

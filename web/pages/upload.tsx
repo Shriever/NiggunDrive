@@ -26,11 +26,20 @@ const upload: NextPage = () => {
             return;
           }
           if (data) {
-            fetch(data.getAWSUploadUrl.uploadUrl, {
+            const { uploadUrl } = data.getAWSUploadUrl;
+            await fetch(uploadUrl, {
               method: 'PUT',
               headers: { 'Content-type': 'multipart/form-data' },
               body: audioFile,
             });
+
+            const audioUrl = uploadUrl.split('?')[0];
+            console.log(audioUrl);
+            const audio = new Audio(audioUrl);
+            audio.play();
+            // const file = await fetch(audioUrl).then(res => res.json());
+
+            // URL.createObjectURL(file)
           }
         }}
       >
