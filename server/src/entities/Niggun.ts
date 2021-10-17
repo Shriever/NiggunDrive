@@ -18,7 +18,7 @@ export class Niggun extends BaseEntity {
   id!: number;
 
   @Field()
-  @Column()
+  @Column({ unique: true })
   title!: string;
 
   @Field()

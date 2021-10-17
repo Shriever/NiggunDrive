@@ -95,7 +95,7 @@ export class NiggunResolver {
       const niggun = await Niggun.create(input).save();
 
       return { niggun };
-    } catch {
+    } catch (err) {
       return { errors: [{ field: 'title', message: 'Title already exists.' }] };
     }
   }

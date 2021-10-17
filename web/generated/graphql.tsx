@@ -30,7 +30,7 @@ export type Mutation = {
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
-  uploadNiggun: Niggun;
+  uploadNiggun: NiggunResponse;
 };
 
 
@@ -53,12 +53,22 @@ export type Niggun = {
   createdAt: Scalars['String'];
   id: Scalars['Int'];
   isLiked: Scalars['Boolean'];
+  length: Scalars['Float'];
+  link: Scalars['String'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
 
 export type NiggunInput = {
+  length: Scalars['Float'];
+  link: Scalars['String'];
   title: Scalars['String'];
+};
+
+export type NiggunResponse = {
+  __typename?: 'NiggunResponse';
+  errors?: Maybe<Array<FieldError>>;
+  niggun?: Maybe<Niggun>;
 };
 
 export type Query = {
@@ -108,6 +118,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', email: string, id: number } | null | undefined } };
 
+export type UploadNiggunMutationVariables = Exact<{
+  input: NiggunInput;
+}>;
+
+
+export type UploadNiggunMutation = { __typename?: 'Mutation', uploadNiggun: { __typename?: 'NiggunResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, niggun?: { __typename?: 'Niggun', id: number, title: string, link: string, length: number } | null | undefined } };
+
 export type GetAwsUploadUrlQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -117,6 +134,11 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, id: number } | null | undefined };
+
+export type NiggunimQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NiggunimQuery = { __typename?: 'Query', niggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number }> };
 
 
 export const LoginDocument = gql`
@@ -230,6 +252,48 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UploadNiggunDocument = gql`
+    mutation UploadNiggun($input: NiggunInput!) {
+  uploadNiggun(input: $input) {
+    errors {
+      field
+      message
+    }
+    niggun {
+      id
+      title
+      link
+      length
+    }
+  }
+}
+    `;
+export type UploadNiggunMutationFn = Apollo.MutationFunction<UploadNiggunMutation, UploadNiggunMutationVariables>;
+
+/**
+ * __useUploadNiggunMutation__
+ *
+ * To run a mutation, you first call `useUploadNiggunMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadNiggunMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadNiggunMutation, { data, loading, error }] = useUploadNiggunMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUploadNiggunMutation(baseOptions?: Apollo.MutationHookOptions<UploadNiggunMutation, UploadNiggunMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadNiggunMutation, UploadNiggunMutationVariables>(UploadNiggunDocument, options);
+      }
+export type UploadNiggunMutationHookResult = ReturnType<typeof useUploadNiggunMutation>;
+export type UploadNiggunMutationResult = Apollo.MutationResult<UploadNiggunMutation>;
+export type UploadNiggunMutationOptions = Apollo.BaseMutationOptions<UploadNiggunMutation, UploadNiggunMutationVariables>;
 export const GetAwsUploadUrlDocument = gql`
     query GetAWSUploadUrl {
   getAWSUploadUrl {
@@ -299,3 +363,40 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const NiggunimDocument = gql`
+    query Niggunim {
+  niggunim {
+    id
+    title
+    link
+    length
+  }
+}
+    `;
+
+/**
+ * __useNiggunimQuery__
+ *
+ * To run a query within a React component, call `useNiggunimQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNiggunimQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNiggunimQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNiggunimQuery(baseOptions?: Apollo.QueryHookOptions<NiggunimQuery, NiggunimQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NiggunimQuery, NiggunimQueryVariables>(NiggunimDocument, options);
+      }
+export function useNiggunimLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NiggunimQuery, NiggunimQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NiggunimQuery, NiggunimQueryVariables>(NiggunimDocument, options);
+        }
+export type NiggunimQueryHookResult = ReturnType<typeof useNiggunimQuery>;
+export type NiggunimLazyQueryHookResult = ReturnType<typeof useNiggunimLazyQuery>;
+export type NiggunimQueryResult = Apollo.QueryResult<NiggunimQuery, NiggunimQueryVariables>;

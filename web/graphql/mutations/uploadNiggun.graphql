@@ -1,0 +1,14 @@
+mutation UploadNiggun($input: NiggunInput!) {
+  uploadNiggun(input: $input) {
+    errors {
+      field
+      message
+    }
+    niggun {
+      id
+      title
+      link
+      length
+    }
+  }
+}
