@@ -27,10 +27,16 @@ export type FieldError = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  like: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
   uploadNiggun: NiggunResponse;
+};
+
+
+export type MutationLikeArgs = {
+  niggunId: Scalars['Int'];
 };
 
 
@@ -98,6 +104,13 @@ export type UsernamePasswordInput = {
   password: Scalars['String'];
 };
 
+export type LikeMutationVariables = Exact<{
+  niggunId: Scalars['Int'];
+}>;
+
+
+export type LikeMutation = { __typename?: 'Mutation', like: boolean };
+
 export type LoginMutationVariables = Exact<{
   options: UsernamePasswordInput;
 }>;
@@ -141,6 +154,37 @@ export type NiggunimQueryVariables = Exact<{ [key: string]: never; }>;
 export type NiggunimQuery = { __typename?: 'Query', niggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number }> };
 
 
+export const LikeDocument = gql`
+    mutation Like($niggunId: Int!) {
+  like(niggunId: $niggunId)
+}
+    `;
+export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
+
+/**
+ * __useLikeMutation__
+ *
+ * To run a mutation, you first call `useLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeMutation, { data, loading, error }] = useLikeMutation({
+ *   variables: {
+ *      niggunId: // value for 'niggunId'
+ *   },
+ * });
+ */
+export function useLikeMutation(baseOptions?: Apollo.MutationHookOptions<LikeMutation, LikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LikeMutation, LikeMutationVariables>(LikeDocument, options);
+      }
+export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
+export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
+export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($options: UsernamePasswordInput!) {
   login(options: $options) {
