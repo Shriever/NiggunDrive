@@ -1,5 +1,8 @@
+import { Like } from '../entities/Like';
+import { MyContext } from 'src/types';
 import {
   Arg,
+  Ctx,
   Field,
   InputType,
   Mutation,
@@ -43,23 +46,20 @@ class NiggunResponse {
 
 @Resolver(Niggun)
 export class NiggunResolver {
-  // @FieldResolver(() => Boolean, {nullable: true})
-  // async isLiked(@Root() niggun: Niggun, @Ctx() { req}: MyContext)
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async like(@Arg('niggunId') niggunId: number, @Ctx() { req }: MyContext) {
+    const { userId } = req.session;
 
-  //   @Mutation(() => Boolean)
-  //   @UseMiddleware(isAuth)
-  //   async like(
-  //     @Arg('niggunId', () => Int) niggunId: number,
-  //     @Arg('isLiked', () => Boolean) isLiked: boolean,
-  //     @Ctx() { req }: MyContext
-  //   ) {
-  //     const { userId } = req.session;
+    const like = await Like.findOne({ where: { userId, niggunId } });
 
-  //     // user is unliking a niggun
-  //     if (isLiked) {
-  //       Like.delete({});
-  //     }
-  //   }
+    if (like) {
+      Like.delete({ userId, niggunId });
+    } else {
+      Like.insert({ userId, niggunId });
+    }
+    return true;
+  }
 
   @Query(() => [Niggun])
   async niggunim(): Promise<Niggun[]> {
@@ -71,7 +71,7 @@ export class NiggunResolver {
   @Query(() => AwsUrl)
   @UseMiddleware(isAuth)
   async getAWSUploadUrl(): Promise<AwsUrl> {
-    const imageName = await generateRandomString();
+    const imageName = generateRandomString();
     const bucketName = 'niggunbucket';
     const s3 = configureS3();
 
