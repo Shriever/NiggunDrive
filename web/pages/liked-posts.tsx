@@ -4,14 +4,33 @@ import Wrapper from '../components/Wrapper';
 import React from 'react';
 import Header from '../components/Header';
 import { useLikedNiggunimQuery } from '../generated/graphql';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
-  const { data, loading } = useLikedNiggunimQuery();
+  const router = useRouter();
+  const { data, loading, error } = useLikedNiggunimQuery();
+  console.log(!!error);
+
   if (loading) {
     return <div>loading</div>;
   }
+  if (!!error) {
+    return (
+      <Wrapper>
+        <Header>
+          Please
+          <span className='text-green-500'>
+            <Link href='/login'> Log In </Link>
+          </span>
+          to view this page
+        </Header>
+      </Wrapper>
+    );
+  }
   if (!data) {
-    return <div>something went wrong</div>;
+    router.push('/');
+    return <div></div>;
   }
   return (
     <Wrapper>

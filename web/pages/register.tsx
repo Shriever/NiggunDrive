@@ -62,7 +62,7 @@ const register: NextPage = () => {
               name='password'
               onChange={handleChange}
             />
-            <span onClick={() => setShowAdvanced(!showAdvanced)}>
+            <span className="cursor-pointer" onClick={() => setShowAdvanced(!showAdvanced)}>
               {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
             </span>
             {showAdvanced ? (

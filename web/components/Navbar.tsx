@@ -5,7 +5,7 @@ import { useLogoutMutation, useMeQuery } from '../generated/graphql';
 import { useApolloClient } from '@apollo/client';
 
 const Navbar = () => {
-  const { data, loading } = useMeQuery();
+  const { data } = useMeQuery();
   const [logout] = useLogoutMutation();
   const apolloClient = useApolloClient();
 

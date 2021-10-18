@@ -7,8 +7,9 @@ import {
   LikeMutation,
   useLikeMutation,
 } from '../generated/graphql';
-import { ApolloCache, useApolloClient } from '@apollo/client';
+import { ApolloCache } from '@apollo/client';
 import gql from 'graphql-tag';
+import { useRouter } from 'next/router';
 
 type Props = {
   track: Track;
@@ -56,7 +57,7 @@ const Niggun = ({
   if (typeof Audio === 'undefined') {
     return <div></div>;
   }
-  const client = useApolloClient();
+  const router = useRouter();
   const [like] = useLikeMutation();
   const [trackProgress, setTrackProgress] = useState(0);
 
@@ -117,15 +118,14 @@ const Niggun = ({
   };
 
   const handleLike = async () => {
-    await like({
-      variables: { niggunId: trackIndex },
-      update: cache => updateAfterLike(trackIndex, cache),
-    });
-    client.refetchQueries({
-      updateCache(cache) {
-        cache.evict({fieldName: 'isLiked'})
-      }
-    })
+    try {
+      const res = await like({
+        variables: { niggunId: trackIndex },
+        update: cache => updateAfterLike(trackIndex, cache),
+      });
+    } catch (err) {
+      router.push('/login');
+    }
   };
 
   return (
