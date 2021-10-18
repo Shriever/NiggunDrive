@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import NiggunList, { Track } from '../components/NiggunList';
+import NiggunList from '../components/NiggunList';
 import Wrapper from '../components/Wrapper';
 import React from 'react';
 import Header from '../components/Header';

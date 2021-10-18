@@ -3,6 +3,7 @@ import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import PlayPause from './PlayPause';
 import { Track } from './NiggunList';
 import { formatTime } from '../utils/formatTime';
+import { useLikeMutation } from '../generated/graphql';
 
 type Props = {
   track: Track;
@@ -23,13 +24,11 @@ const Niggun = ({
     return <div></div>;
   }
 
-  const [isLiked, setIsLiked] = useState(false);
+  const [like] = useLikeMutation();
   const [trackProgress, setTrackProgress] = useState(0);
-  
 
   const audioRef = useRef(new Audio(track.link));
   const intervalRef = useRef<NodeJS.Timer>();
-  // const { duration } = audioRef.current;
 
   const startTimer = () => {
     if (intervalRef.current) {
@@ -84,11 +83,8 @@ const Niggun = ({
     setIsPlaying(isPlay);
   };
 
-  const handleLike = () => {
-    setIsLiked(true);
-  };
-  const handleUnlike = () => {
-    setIsLiked(false);
+  const handleLike = async () => {
+    await like({ variables: { niggunId: trackIndex } });
   };
 
   return (
@@ -102,9 +98,9 @@ const Niggun = ({
             />
             <h4 className='text-lg'>{track.title}</h4>
           </div>
-          {isLiked ? (
+          {track.isLiked ? (
             <IoHeart
-              onClick={handleUnlike}
+              onClick={handleLike}
               className='text-green-500 cursor-pointer transform hover:scale-110'
               size={'1.6em'}
             />
