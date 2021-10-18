@@ -7,7 +7,7 @@ import {
   LikeMutation,
   useLikeMutation,
 } from '../generated/graphql';
-import { ApolloCache } from '@apollo/client';
+import { ApolloCache, useApolloClient } from '@apollo/client';
 import gql from 'graphql-tag';
 
 type Props = {
@@ -41,7 +41,7 @@ const updateAfterLike = (
           isLiked
         }
       `,
-      data: {isLiked: !data.isLiked}
+      data: { isLiked: !data.isLiked },
     });
   }
 };
@@ -56,7 +56,7 @@ const Niggun = ({
   if (typeof Audio === 'undefined') {
     return <div></div>;
   }
-
+  const client = useApolloClient();
   const [like] = useLikeMutation();
   const [trackProgress, setTrackProgress] = useState(0);
 
@@ -121,6 +121,11 @@ const Niggun = ({
       variables: { niggunId: trackIndex },
       update: cache => updateAfterLike(trackIndex, cache),
     });
+    client.refetchQueries({
+      updateCache(cache) {
+        cache.evict({fieldName: 'isLiked'})
+      }
+    })
   };
 
   return (

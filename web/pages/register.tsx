@@ -1,7 +1,7 @@
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import Input from '../components/Input';
 import SubmitButton from '../components/SubmitButton';
@@ -13,12 +13,13 @@ import { ValuesOfCorrectTypeRule } from 'graphql';
 const register: NextPage = () => {
   const router = useRouter();
   const [register] = useRegisterMutation();
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   return (
     <Wrapper>
       <Header>Register</Header>
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: '', password: '', admin: '' }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values);
 
@@ -61,6 +62,18 @@ const register: NextPage = () => {
               name='password'
               onChange={handleChange}
             />
+            <span onClick={() => setShowAdvanced(!showAdvanced)}>
+              {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+            </span>
+            {showAdvanced ? (
+              <Input
+                value={values.admin}
+                type='text'
+                placeholder='Admin Key'
+                name='Admin Key'
+                onChange={handleChange}
+              />
+            ) : null}
             {errors ? (
               <span className='text-red-500'>
                 {errors.email || errors.password}
