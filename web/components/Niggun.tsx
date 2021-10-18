@@ -33,6 +33,19 @@ const updateAfterLike = (
       }
     `,
   });
+  
+  if (data) {
+    cache.writeFragment({
+      id: 'Niggun:' + trackIndex,
+      fragment: gql`
+        fragment __ on Niggun {
+          id
+          isLiked
+        }
+      `,
+      data: {isLiked: !data.isLiked}
+    });
+  }
 };
 
 const Niggun = ({
