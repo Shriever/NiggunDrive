@@ -5,6 +5,7 @@ import {
   Ctx,
   Field,
   InputType,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -16,6 +17,7 @@ import { isAuth } from '../middleware/isAuth';
 import { configureS3 } from '../utils/configureS3';
 import { generateRandomString } from '../utils/generateRandomString';
 import { FieldError } from './user';
+import { getConnection } from 'typeorm';
 
 @InputType()
 class NiggunInput {
@@ -48,7 +50,10 @@ class NiggunResponse {
 export class NiggunResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
-  async like(@Arg('niggunId') niggunId: number, @Ctx() { req }: MyContext) {
+  async like(
+    @Arg('niggunId', () => Int) niggunId: number,
+    @Ctx() { req }: MyContext
+  ) {
     const { userId } = req.session;
 
     const like = await Like.findOne({ where: { userId, niggunId } });
@@ -62,8 +67,26 @@ export class NiggunResolver {
   }
 
   @Query(() => [Niggun])
-  async niggunim(): Promise<Niggun[]> {
-    const niggunim = await Niggun.find();
+  async niggunim(@Ctx() { req }: MyContext): Promise<Niggun[]> {
+    // const niggunim = await Niggun.find();
+    console.log('called');
+
+    const { userId } = req.session;
+
+    const niggunim = await getConnection().query(
+      `
+      select n.*,
+      ${
+        userId
+          ? '(select "niggunId" from "like" where "userId" = $1 and "niggunId" = n.id) "isLiked"'
+          : 'false as "isLiked"'
+      }
+      from niggun n
+      order by n."createdAt" DESC
+    `,
+      [userId]
+    );
+    console.log(niggunim);
 
     return niggunim;
   }

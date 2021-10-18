@@ -58,7 +58,7 @@ export type Niggun = {
   __typename?: 'Niggun';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
-  isLiked: Scalars['Boolean'];
+  isLiked?: Maybe<Scalars['Boolean']>;
   length: Scalars['Float'];
   link: Scalars['String'];
   title: Scalars['String'];
@@ -151,7 +151,7 @@ export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email:
 export type NiggunimQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NiggunimQuery = { __typename?: 'Query', niggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number }> };
+export type NiggunimQuery = { __typename?: 'Query', niggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number, isLiked?: boolean | null | undefined }> };
 
 
 export const LikeDocument = gql`
@@ -414,6 +414,7 @@ export const NiggunimDocument = gql`
     title
     link
     length
+    isLiked
   }
 }
     `;

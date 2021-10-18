@@ -4,5 +4,6 @@ query Niggunim {
     title
     link
     length
+    isLiked
   }
 }
