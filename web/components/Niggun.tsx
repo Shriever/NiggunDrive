@@ -3,7 +3,14 @@ import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import PlayPause from './PlayPause';
 import { Track } from './NiggunList';
 import { formatTime } from '../utils/formatTime';
-import { useLikeMutation } from '../generated/graphql';
+import {
+  LikeMutation,
+  NiggunimDocument,
+  NiggunimQuery,
+  useLikeMutation,
+} from '../generated/graphql';
+import { ApolloCache } from '@apollo/client';
+import gql from 'graphql-tag';
 
 type Props = {
   track: Track;
@@ -11,6 +18,21 @@ type Props = {
   setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   trackIndex: number;
   setTrackIndex: React.Dispatch<React.SetStateAction<number>>;
+};
+
+const updateAfterLike = (
+  trackIndex: number,
+  cache: ApolloCache<LikeMutation>
+) => {
+  const data = cache.readFragment<{ id: number; isLiked: boolean | null }>({
+    id: 'Niggun:' + trackIndex,
+    fragment: gql`
+      fragment __ on Niggun {
+        id
+        isLiked
+      }
+    `,
+  });
 };
 
 const Niggun = ({
@@ -84,7 +106,10 @@ const Niggun = ({
   };
 
   const handleLike = async () => {
-    await like({ variables: { niggunId: trackIndex } });
+    await like({
+      variables: { niggunId: trackIndex },
+      update: cache => updateAfterLike(trackIndex, cache),
+    });
   };
 
   return (
