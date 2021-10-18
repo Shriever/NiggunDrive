@@ -5,8 +5,6 @@ import { Track } from './NiggunList';
 import { formatTime } from '../utils/formatTime';
 import {
   LikeMutation,
-  NiggunimDocument,
-  NiggunimQuery,
   useLikeMutation,
 } from '../generated/graphql';
 import { ApolloCache } from '@apollo/client';
@@ -33,7 +31,7 @@ const updateAfterLike = (
       }
     `,
   });
-  
+
   if (data) {
     cache.writeFragment({
       id: 'Niggun:' + trackIndex,

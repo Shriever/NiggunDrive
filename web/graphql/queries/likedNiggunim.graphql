@@ -1,0 +1,9 @@
+query LikedNiggunim {
+  likedNiggunim {
+    id
+    title
+    link
+    length
+    isLiked
+  }
+}

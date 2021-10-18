@@ -81,6 +81,7 @@ export type Query = {
   __typename?: 'Query';
   getAWSUploadUrl: AwsUrl;
   hello: Scalars['String'];
+  likedNiggunim: Array<Niggun>;
   me?: Maybe<User>;
   niggunim: Array<Niggun>;
 };
@@ -142,6 +143,11 @@ export type GetAwsUploadUrlQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAwsUploadUrlQuery = { __typename?: 'Query', getAWSUploadUrl: { __typename?: 'AwsUrl', uploadUrl: string } };
+
+export type LikedNiggunimQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LikedNiggunimQuery = { __typename?: 'Query', likedNiggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number, isLiked?: boolean | null | undefined }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -372,6 +378,44 @@ export function useGetAwsUploadUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetAwsUploadUrlQueryHookResult = ReturnType<typeof useGetAwsUploadUrlQuery>;
 export type GetAwsUploadUrlLazyQueryHookResult = ReturnType<typeof useGetAwsUploadUrlLazyQuery>;
 export type GetAwsUploadUrlQueryResult = Apollo.QueryResult<GetAwsUploadUrlQuery, GetAwsUploadUrlQueryVariables>;
+export const LikedNiggunimDocument = gql`
+    query LikedNiggunim {
+  likedNiggunim {
+    id
+    title
+    link
+    length
+    isLiked
+  }
+}
+    `;
+
+/**
+ * __useLikedNiggunimQuery__
+ *
+ * To run a query within a React component, call `useLikedNiggunimQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLikedNiggunimQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLikedNiggunimQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLikedNiggunimQuery(baseOptions?: Apollo.QueryHookOptions<LikedNiggunimQuery, LikedNiggunimQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LikedNiggunimQuery, LikedNiggunimQueryVariables>(LikedNiggunimDocument, options);
+      }
+export function useLikedNiggunimLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LikedNiggunimQuery, LikedNiggunimQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LikedNiggunimQuery, LikedNiggunimQueryVariables>(LikedNiggunimDocument, options);
+        }
+export type LikedNiggunimQueryHookResult = ReturnType<typeof useLikedNiggunimQuery>;
+export type LikedNiggunimLazyQueryHookResult = ReturnType<typeof useLikedNiggunimLazyQuery>;
+export type LikedNiggunimQueryResult = Apollo.QueryResult<LikedNiggunimQuery, LikedNiggunimQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

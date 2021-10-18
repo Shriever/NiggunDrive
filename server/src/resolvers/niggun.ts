@@ -67,10 +67,28 @@ export class NiggunResolver {
   }
 
   @Query(() => [Niggun])
-  async niggunim(@Ctx() { req }: MyContext): Promise<Niggun[]> {
-    // const niggunim = await Niggun.find();
-    console.log('called');
+  @UseMiddleware(isAuth)
+  async likedNiggunim(@Ctx() { req }: MyContext): Promise<Niggun[]> {
+    const { userId } = req.session;
 
+    const niggunim = await getConnection().query(
+      `
+    select n.*,
+    (select "niggunId" from "like" where "userId" = $1 and "niggunId" = n.id) "isLiked"
+    from niggun n
+    where id in (select "niggunId" from "like" where "userId" = $1)
+    `,
+      [userId]
+    );
+
+    console.log(niggunim);
+    
+
+    return niggunim;
+  }
+
+  @Query(() => [Niggun])
+  async niggunim(@Ctx() { req }: MyContext): Promise<Niggun[]> {
     const { userId } = req.session;
 
     const niggunim = await getConnection().query(
