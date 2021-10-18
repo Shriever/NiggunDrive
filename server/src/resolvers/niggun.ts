@@ -91,6 +91,11 @@ export class NiggunResolver {
   async niggunim(@Ctx() { req }: MyContext): Promise<Niggun[]> {
     const { userId } = req.session;
 
+    const params = [];
+    if (userId) {
+      params.push(userId);
+    }
+
     const niggunim = await getConnection().query(
       `
       select n.*,
@@ -102,9 +107,8 @@ export class NiggunResolver {
       from niggun n
       order by n."createdAt" DESC
     `,
-      [userId]
+      params
     );
-    console.log(niggunim);
 
     return niggunim;
   }
