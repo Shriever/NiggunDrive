@@ -34,12 +34,18 @@ class UserResponse {
 @Resolver(User)
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  me(@Ctx() { req }: MyContext) {
+  async me(@Ctx() { req }: MyContext) {
     if (!req.session.userId) {
       return null;
     }
 
-    return User.findOne(req.session.userId);
+    const user = await User.findOne(req.session.userId);
+    if (!user) {
+      return null;
+    }
+    user.isAdmin = user.isAdmin ? true : false;
+
+    return user;
   }
 
   @Mutation(() => UserResponse)
@@ -76,10 +82,11 @@ export class UserResolver {
       email,
       password: hashedPassword,
     };
+    console.log(adminKey, process.env.ADMIN_KEY);
+
     if (adminKey === process.env.ADMIN_KEY) {
       userParams.isAdmin = true;
-    }
-    if (adminKey !== '') {
+    } else if (adminKey !== '') {
       return {
         errors: [
           {
@@ -89,6 +96,7 @@ export class UserResolver {
         ],
       };
     }
+
     try {
       const user = await User.create(userParams).save();
 

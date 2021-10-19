@@ -18,6 +18,7 @@ import { configureS3 } from '../utils/configureS3';
 import { generateRandomString } from '../utils/generateRandomString';
 import { FieldError } from './user';
 import { getConnection } from 'typeorm';
+import { User } from '../entities/User';
 
 @InputType()
 class NiggunInput {
@@ -82,7 +83,6 @@ export class NiggunResolver {
     );
 
     console.log(niggunim);
-    
 
     return niggunim;
   }
@@ -115,10 +115,15 @@ export class NiggunResolver {
 
   @Query(() => AwsUrl)
   @UseMiddleware(isAuth)
-  async getAWSUploadUrl(): Promise<AwsUrl> {
+  async getAWSUploadUrl(@Ctx() { req }: MyContext): Promise<AwsUrl> {
     const imageName = generateRandomString();
     const bucketName = 'niggunbucket';
     const s3 = configureS3();
+
+    const user = await User.findOne({ id: req.session.userId });
+    if (!user?.isAdmin) {
+      throw new Error('Only admins may upload niggunim.');
+    }
 
     const params = {
       Bucket: bucketName,
