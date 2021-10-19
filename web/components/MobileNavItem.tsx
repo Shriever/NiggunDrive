@@ -24,9 +24,9 @@ const MobileNavItem: React.FC<Props> = ({ children, link, logout }) => {
     );
   }
   return (
-    <div className='cursor-pointer border-b-2 py-3 pl-2'>
-      <Link href={link}>{children}</Link>
-    </div>
+    <Link href={link}>
+      <div className='cursor-pointer border-b-2 py-3 pl-2'>{children}</div>
+    </Link>
   );
 };
 

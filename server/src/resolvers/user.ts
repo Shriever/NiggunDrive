@@ -59,7 +59,7 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: 'Email',
+            field: 'email',
             message: 'Email must be at least 3 characters long.',
           },
         ],
@@ -82,7 +82,6 @@ export class UserResolver {
       email,
       password: hashedPassword,
     };
-    console.log(adminKey, process.env.ADMIN_KEY);
 
     if (adminKey === process.env.ADMIN_KEY) {
       userParams.isAdmin = true;

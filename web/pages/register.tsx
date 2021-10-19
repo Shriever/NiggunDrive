@@ -21,8 +21,6 @@ const register: NextPage = () => {
       <Formik
         initialValues={{ email: '', password: '', adminKey: '' }}
         onSubmit={async (values, { setErrors }) => {
-          console.log(values);
-
           const response = await register({
             variables: values,
             update: (cache, { data }) => {
