@@ -5,6 +5,11 @@ export type MyContext = {
   res: Response;
   redis: Redis;
 };
+export type UserParams = {
+  email: string;
+  password: string;
+  isAdmin?: boolean;
+};
 declare module 'express-session' {
   interface SessionData {
     userId: number;

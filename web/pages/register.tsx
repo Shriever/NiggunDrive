@@ -51,18 +51,21 @@ const register: NextPage = () => {
             <Input
               value={values.email}
               type='email'
-              placeholder='Email Address'
+              placeholder='Email Address*'
               name='email'
               onChange={handleChange}
             />
             <Input
               value={values.password}
               type='password'
-              placeholder='Password'
+              placeholder='Password*'
               name='password'
               onChange={handleChange}
             />
-            <span className="cursor-pointer" onClick={() => setShowAdvanced(!showAdvanced)}>
+            <span
+              className='cursor-pointer'
+              onClick={() => setShowAdvanced(!showAdvanced)}
+            >
               {showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
             </span>
             {showAdvanced ? (
@@ -70,7 +73,7 @@ const register: NextPage = () => {
                 value={values.admin}
                 type='text'
                 placeholder='Admin Key'
-                name='Admin Key'
+                name='admin'
                 onChange={handleChange}
               />
             ) : null}

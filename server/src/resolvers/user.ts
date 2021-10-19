@@ -7,7 +7,7 @@ import {
   Field,
   Arg,
 } from 'type-graphql';
-import { MyContext } from '../types';
+import { MyContext, UserParams } from '../types';
 import { User } from '../entities/User';
 import { UsernamePasswordInput } from './UsernamePasswordInput';
 import { hash, verify } from 'argon2';
@@ -47,7 +47,7 @@ export class UserResolver {
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    const { email, password } = options;
+    const { email, password, adminKey } = options;
 
     if (email.length < 3) {
       return {
@@ -72,11 +72,25 @@ export class UserResolver {
     }
 
     const hashedPassword = await hash(password);
+    const userParams: UserParams = {
+      email,
+      password: hashedPassword,
+    };
+    if (adminKey === process.env.ADMIN_KEY) {
+      userParams.isAdmin = true;
+    }
+    if (adminKey !== '') {
+      return {
+        errors: [
+          {
+            field: 'email',
+            message: 'Admin key is incorrect.',
+          },
+        ],
+      };
+    }
     try {
-      const user = await User.create({
-        email,
-        password: hashedPassword,
-      }).save();
+      const user = await User.create(userParams).save();
 
       req.session.userId = user.id;
 
