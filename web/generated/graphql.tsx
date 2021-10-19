@@ -91,6 +91,7 @@ export type User = {
   createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Int'];
+  isAdmin?: Maybe<Scalars['Boolean']>;
   updatedAt: Scalars['String'];
 };
 
@@ -101,6 +102,7 @@ export type UserResponse = {
 };
 
 export type UsernamePasswordInput = {
+  adminKey?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   password: Scalars['String'];
 };
@@ -127,6 +129,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 export type RegisterMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
+  adminKey: Scalars['String'];
 }>;
 
 
@@ -152,7 +155,7 @@ export type LikedNiggunimQuery = { __typename?: 'Query', likedNiggunim: Array<{ 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, id: number } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, isAdmin?: boolean | null | undefined, id: number } | null | undefined };
 
 export type NiggunimQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -262,8 +265,8 @@ export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($email: String!, $password: String!) {
-  register(options: {email: $email, password: $password}) {
+    mutation Register($email: String!, $password: String!, $adminKey: String!) {
+  register(options: {email: $email, password: $password, adminKey: $adminKey}) {
     errors {
       field
       message
@@ -292,6 +295,7 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   variables: {
  *      email: // value for 'email'
  *      password: // value for 'password'
+ *      adminKey: // value for 'adminKey'
  *   },
  * });
  */
@@ -420,6 +424,7 @@ export const MeDocument = gql`
     query Me {
   me {
     email
+    isAdmin
     id
   }
 }

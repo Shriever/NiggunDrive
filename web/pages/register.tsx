@@ -19,7 +19,7 @@ const register: NextPage = () => {
     <Wrapper>
       <Header>Register</Header>
       <Formik
-        initialValues={{ email: '', password: '', admin: '' }}
+        initialValues={{ email: '', password: '', adminKey: '' }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values);
 
@@ -70,10 +70,10 @@ const register: NextPage = () => {
             </span>
             {showAdvanced ? (
               <Input
-                value={values.admin}
+                value={values.adminKey}
                 type='text'
                 placeholder='Admin Key'
-                name='admin'
+                name='adminKey'
                 onChange={handleChange}
               />
             ) : null}
