@@ -82,8 +82,6 @@ export class NiggunResolver {
       [userId]
     );
 
-    console.log(niggunim);
-
     return niggunim;
   }
 

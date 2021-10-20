@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import NiggunList, { Track } from '../components/NiggunList';
+import NiggunList from '../components/NiggunList';
 import Wrapper from '../components/Wrapper';
 import React from 'react';
 import Header from '../components/Header';
@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 const Home: NextPage = () => {
   const router = useRouter();
   const { data, loading, error } = useLikedNiggunimQuery();
-  console.log(!!error);
 
   if (loading) {
     return <div>loading</div>;

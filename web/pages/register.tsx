@@ -8,7 +8,6 @@ import SubmitButton from '../components/SubmitButton';
 import Wrapper from '../components/Wrapper';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
-import { ValuesOfCorrectTypeRule } from 'graphql';
 
 const register: NextPage = () => {
   const router = useRouter();
