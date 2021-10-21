@@ -10,8 +10,8 @@ import {
 import { MyContext, UserParams } from '../types';
 import { User } from '../entities/User';
 import { UsernamePasswordInput } from './UsernamePasswordInput';
-import { hash, verify } from 'argon2';
 import { COOKIE_NAME } from '../constants';
+import { hash, compare, genSalt } from 'bcryptjs';
 
 @ObjectType()
 export class FieldError {
@@ -77,7 +77,9 @@ export class UserResolver {
       };
     }
 
-    const hashedPassword = await hash(password);
+    const salt = await genSalt();
+
+    const hashedPassword = await hash(password, salt);
     const userParams: UserParams = {
       email,
       password: hashedPassword,
@@ -138,7 +140,7 @@ export class UserResolver {
       };
     }
 
-    const isValid = await verify(user.password, password);
+    const isValid = await compare(password, user.password);
 
     if (!isValid) {
       return {
