@@ -44,6 +44,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: 'lax',
         secure: __prod__,
+        domain: __prod__ ? '.niggundrive.com' : undefined,
       },
       saveUninitialized: false,
       secret: process.env.ACCESS_TOKEN_SECRET || 'amazing secret',
