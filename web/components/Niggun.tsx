@@ -3,6 +3,13 @@ import { IoHeartOutline, IoHeart } from 'react-icons/io5';
 import PlayPause from './PlayPause';
 import { Track } from './NiggunList';
 import { formatTime } from '../utils/formatTime';
+import {
+  LikeMutation,
+  useLikeMutation,
+} from '../generated/graphql';
+import { ApolloCache } from '@apollo/client';
+import gql from 'graphql-tag';
+import { useRouter } from 'next/router';
 
 type Props = {
   track: Track;
@@ -10,6 +17,34 @@ type Props = {
   setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
   trackIndex: number;
   setTrackIndex: React.Dispatch<React.SetStateAction<number>>;
+};
+
+const updateAfterLike = (
+  trackIndex: number,
+  cache: ApolloCache<LikeMutation>
+) => {
+  const data = cache.readFragment<{ id: number; isLiked: boolean | null }>({
+    id: 'Niggun:' + trackIndex,
+    fragment: gql`
+      fragment __ on Niggun {
+        id
+        isLiked
+      }
+    `,
+  });
+
+  if (data) {
+    cache.writeFragment({
+      id: 'Niggun:' + trackIndex,
+      fragment: gql`
+        fragment __ on Niggun {
+          id
+          isLiked
+        }
+      `,
+      data: { isLiked: !data.isLiked },
+    });
+  }
 };
 
 const Niggun = ({
@@ -22,14 +57,12 @@ const Niggun = ({
   if (typeof Audio === 'undefined') {
     return <div></div>;
   }
-
-  const [isLiked, setIsLiked] = useState(false);
+  const router = useRouter();
+  const [like] = useLikeMutation();
   const [trackProgress, setTrackProgress] = useState(0);
-  
 
   const audioRef = useRef(new Audio(track.link));
   const intervalRef = useRef<NodeJS.Timer>();
-  // const { duration } = audioRef.current;
 
   const startTimer = () => {
     if (intervalRef.current) {
@@ -84,11 +117,15 @@ const Niggun = ({
     setIsPlaying(isPlay);
   };
 
-  const handleLike = () => {
-    setIsLiked(true);
-  };
-  const handleUnlike = () => {
-    setIsLiked(false);
+  const handleLike = async () => {
+    try {
+      const res = await like({
+        variables: { niggunId: trackIndex },
+        update: cache => updateAfterLike(trackIndex, cache),
+      });
+    } catch (err) {
+      router.push('/login');
+    }
   };
 
   return (
@@ -102,9 +139,9 @@ const Niggun = ({
             />
             <h4 className='text-lg'>{track.title}</h4>
           </div>
-          {isLiked ? (
+          {track.isLiked ? (
             <IoHeart
-              onClick={handleUnlike}
+              onClick={handleLike}
               className='text-green-500 cursor-pointer transform hover:scale-110'
               size={'1.6em'}
             />

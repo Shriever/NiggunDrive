@@ -7,7 +7,7 @@ import {
   Field,
   Arg,
 } from 'type-graphql';
-import { MyContext } from '../types';
+import { MyContext, UserParams } from '../types';
 import { User } from '../entities/User';
 import { UsernamePasswordInput } from './UsernamePasswordInput';
 import { hash, verify } from 'argon2';
@@ -34,12 +34,18 @@ class UserResponse {
 @Resolver(User)
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  me(@Ctx() { req }: MyContext) {
+  async me(@Ctx() { req }: MyContext) {
     if (!req.session.userId) {
       return null;
     }
 
-    return User.findOne(req.session.userId);
+    const user = await User.findOne(req.session.userId);
+    if (!user) {
+      return null;
+    }
+    user.isAdmin = user.isAdmin ? true : false;
+
+    return user;
   }
 
   @Mutation(() => UserResponse)
@@ -47,13 +53,13 @@ export class UserResolver {
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    const { email, password } = options;
+    const { email, password, adminKey } = options;
 
     if (email.length < 3) {
       return {
         errors: [
           {
-            field: 'Email',
+            field: 'email',
             message: 'Email must be at least 3 characters long.',
           },
         ],
@@ -72,11 +78,26 @@ export class UserResolver {
     }
 
     const hashedPassword = await hash(password);
+    const userParams: UserParams = {
+      email,
+      password: hashedPassword,
+    };
+
+    if (adminKey === process.env.ADMIN_KEY) {
+      userParams.isAdmin = true;
+    } else if (adminKey !== '') {
+      return {
+        errors: [
+          {
+            field: 'email',
+            message: 'Admin key is incorrect.',
+          },
+        ],
+      };
+    }
+
     try {
-      const user = await User.create({
-        email,
-        password: hashedPassword,
-      }).save();
+      const user = await User.create(userParams).save();
 
       req.session.userId = user.id;
 

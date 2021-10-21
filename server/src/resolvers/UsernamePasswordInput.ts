@@ -7,4 +7,7 @@ export class UsernamePasswordInput {
 
   @Field()
   password: string;
+
+  @Field({ nullable: true })
+  adminKey?: string;
 }

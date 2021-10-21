@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import Niggun from './Niggun';
 
 export type Track = {
+  __typename?: 'Niggun' | undefined;
   id: number;
   title: string;
   link: string;
   length: number;
+  isLiked?: boolean | null | undefined;
 };
 
 type Props = { tracks: Track[] };

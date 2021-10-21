@@ -1,5 +1,5 @@
-query Niggunim {
-  niggunim {
+query LikedNiggunim {
+  likedNiggunim {
     id
     title
     link

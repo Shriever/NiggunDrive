@@ -29,8 +29,8 @@ export class Niggun extends BaseEntity {
   @Column()
   length!: number;
 
-  @Field(() => Boolean)
-  isLiked: boolean;
+  @Field(() => Boolean, { nullable: true })
+  isLiked: boolean | null;
 
   @OneToMany(() => Like, like => like.niggun)
   likes: Like[];

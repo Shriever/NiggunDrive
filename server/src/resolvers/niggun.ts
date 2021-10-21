@@ -1,7 +1,11 @@
+import { Like } from '../entities/Like';
+import { MyContext } from 'src/types';
 import {
   Arg,
+  Ctx,
   Field,
   InputType,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -13,6 +17,8 @@ import { isAuth } from '../middleware/isAuth';
 import { configureS3 } from '../utils/configureS3';
 import { generateRandomString } from '../utils/generateRandomString';
 import { FieldError } from './user';
+import { getConnection } from 'typeorm';
+import { User } from '../entities/User';
 
 @InputType()
 class NiggunInput {
@@ -43,37 +49,79 @@ class NiggunResponse {
 
 @Resolver(Niggun)
 export class NiggunResolver {
-  // @FieldResolver(() => Boolean, {nullable: true})
-  // async isLiked(@Root() niggun: Niggun, @Ctx() { req}: MyContext)
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async like(
+    @Arg('niggunId', () => Int) niggunId: number,
+    @Ctx() { req }: MyContext
+  ) {
+    const { userId } = req.session;
 
-  //   @Mutation(() => Boolean)
-  //   @UseMiddleware(isAuth)
-  //   async like(
-  //     @Arg('niggunId', () => Int) niggunId: number,
-  //     @Arg('isLiked', () => Boolean) isLiked: boolean,
-  //     @Ctx() { req }: MyContext
-  //   ) {
-  //     const { userId } = req.session;
+    const like = await Like.findOne({ where: { userId, niggunId } });
 
-  //     // user is unliking a niggun
-  //     if (isLiked) {
-  //       Like.delete({});
-  //     }
-  //   }
+    if (like) {
+      Like.delete({ userId, niggunId });
+    } else {
+      Like.insert({ userId, niggunId });
+    }
+    return true;
+  }
 
   @Query(() => [Niggun])
-  async niggunim(): Promise<Niggun[]> {
-    const niggunim = await Niggun.find();
+  @UseMiddleware(isAuth)
+  async likedNiggunim(@Ctx() { req }: MyContext): Promise<Niggun[]> {
+    const { userId } = req.session;
+
+    const niggunim = await getConnection().query(
+      `
+    select n.*,
+    (select "niggunId" from "like" where "userId" = $1 and "niggunId" = n.id) "isLiked"
+    from niggun n
+    where id in (select "niggunId" from "like" where "userId" = $1)
+    `,
+      [userId]
+    );
+
+    return niggunim;
+  }
+
+  @Query(() => [Niggun])
+  async niggunim(@Ctx() { req }: MyContext): Promise<Niggun[]> {
+    const { userId } = req.session;
+
+    const params = [];
+    if (userId) {
+      params.push(userId);
+    }
+
+    const niggunim = await getConnection().query(
+      `
+      select n.*,
+      ${
+        userId
+          ? '(select "niggunId" from "like" where "userId" = $1 and "niggunId" = n.id) "isLiked"'
+          : 'false as "isLiked"'
+      }
+      from niggun n
+      order by n."createdAt" DESC
+    `,
+      params
+    );
 
     return niggunim;
   }
 
   @Query(() => AwsUrl)
   @UseMiddleware(isAuth)
-  async getAWSUploadUrl(): Promise<AwsUrl> {
-    const imageName = await generateRandomString();
+  async getAWSUploadUrl(@Ctx() { req }: MyContext): Promise<AwsUrl> {
+    const imageName = generateRandomString();
     const bucketName = 'niggunbucket';
     const s3 = configureS3();
+
+    const user = await User.findOne({ id: req.session.userId });
+    if (!user?.isAdmin) {
+      throw new Error('Only admins may upload niggunim.');
+    }
 
     const params = {
       Bucket: bucketName,

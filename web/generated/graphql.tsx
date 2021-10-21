@@ -27,10 +27,16 @@ export type FieldError = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  like: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
   uploadNiggun: NiggunResponse;
+};
+
+
+export type MutationLikeArgs = {
+  niggunId: Scalars['Int'];
 };
 
 
@@ -52,7 +58,7 @@ export type Niggun = {
   __typename?: 'Niggun';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
-  isLiked: Scalars['Boolean'];
+  isLiked?: Maybe<Scalars['Boolean']>;
   length: Scalars['Float'];
   link: Scalars['String'];
   title: Scalars['String'];
@@ -75,6 +81,7 @@ export type Query = {
   __typename?: 'Query';
   getAWSUploadUrl: AwsUrl;
   hello: Scalars['String'];
+  likedNiggunim: Array<Niggun>;
   me?: Maybe<User>;
   niggunim: Array<Niggun>;
 };
@@ -84,6 +91,7 @@ export type User = {
   createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Int'];
+  isAdmin?: Maybe<Scalars['Boolean']>;
   updatedAt: Scalars['String'];
 };
 
@@ -94,9 +102,17 @@ export type UserResponse = {
 };
 
 export type UsernamePasswordInput = {
+  adminKey?: Maybe<Scalars['String']>;
   email: Scalars['String'];
   password: Scalars['String'];
 };
+
+export type LikeMutationVariables = Exact<{
+  niggunId: Scalars['Int'];
+}>;
+
+
+export type LikeMutation = { __typename?: 'Mutation', like: boolean };
 
 export type LoginMutationVariables = Exact<{
   options: UsernamePasswordInput;
@@ -113,6 +129,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 export type RegisterMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
+  adminKey: Scalars['String'];
 }>;
 
 
@@ -130,17 +147,53 @@ export type GetAwsUploadUrlQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAwsUploadUrlQuery = { __typename?: 'Query', getAWSUploadUrl: { __typename?: 'AwsUrl', uploadUrl: string } };
 
+export type LikedNiggunimQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LikedNiggunimQuery = { __typename?: 'Query', likedNiggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number, isLiked?: boolean | null | undefined }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, id: number } | null | undefined };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, isAdmin?: boolean | null | undefined, id: number } | null | undefined };
 
 export type NiggunimQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NiggunimQuery = { __typename?: 'Query', niggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number }> };
+export type NiggunimQuery = { __typename?: 'Query', niggunim: Array<{ __typename?: 'Niggun', id: number, title: string, link: string, length: number, isLiked?: boolean | null | undefined }> };
 
 
+export const LikeDocument = gql`
+    mutation Like($niggunId: Int!) {
+  like(niggunId: $niggunId)
+}
+    `;
+export type LikeMutationFn = Apollo.MutationFunction<LikeMutation, LikeMutationVariables>;
+
+/**
+ * __useLikeMutation__
+ *
+ * To run a mutation, you first call `useLikeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeMutation, { data, loading, error }] = useLikeMutation({
+ *   variables: {
+ *      niggunId: // value for 'niggunId'
+ *   },
+ * });
+ */
+export function useLikeMutation(baseOptions?: Apollo.MutationHookOptions<LikeMutation, LikeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LikeMutation, LikeMutationVariables>(LikeDocument, options);
+      }
+export type LikeMutationHookResult = ReturnType<typeof useLikeMutation>;
+export type LikeMutationResult = Apollo.MutationResult<LikeMutation>;
+export type LikeMutationOptions = Apollo.BaseMutationOptions<LikeMutation, LikeMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($options: UsernamePasswordInput!) {
   login(options: $options) {
@@ -212,8 +265,8 @@ export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($email: String!, $password: String!) {
-  register(options: {email: $email, password: $password}) {
+    mutation Register($email: String!, $password: String!, $adminKey: String!) {
+  register(options: {email: $email, password: $password, adminKey: $adminKey}) {
     errors {
       field
       message
@@ -242,6 +295,7 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   variables: {
  *      email: // value for 'email'
  *      password: // value for 'password'
+ *      adminKey: // value for 'adminKey'
  *   },
  * });
  */
@@ -328,10 +382,49 @@ export function useGetAwsUploadUrlLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type GetAwsUploadUrlQueryHookResult = ReturnType<typeof useGetAwsUploadUrlQuery>;
 export type GetAwsUploadUrlLazyQueryHookResult = ReturnType<typeof useGetAwsUploadUrlLazyQuery>;
 export type GetAwsUploadUrlQueryResult = Apollo.QueryResult<GetAwsUploadUrlQuery, GetAwsUploadUrlQueryVariables>;
+export const LikedNiggunimDocument = gql`
+    query LikedNiggunim {
+  likedNiggunim {
+    id
+    title
+    link
+    length
+    isLiked
+  }
+}
+    `;
+
+/**
+ * __useLikedNiggunimQuery__
+ *
+ * To run a query within a React component, call `useLikedNiggunimQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLikedNiggunimQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLikedNiggunimQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLikedNiggunimQuery(baseOptions?: Apollo.QueryHookOptions<LikedNiggunimQuery, LikedNiggunimQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LikedNiggunimQuery, LikedNiggunimQueryVariables>(LikedNiggunimDocument, options);
+      }
+export function useLikedNiggunimLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LikedNiggunimQuery, LikedNiggunimQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LikedNiggunimQuery, LikedNiggunimQueryVariables>(LikedNiggunimDocument, options);
+        }
+export type LikedNiggunimQueryHookResult = ReturnType<typeof useLikedNiggunimQuery>;
+export type LikedNiggunimLazyQueryHookResult = ReturnType<typeof useLikedNiggunimLazyQuery>;
+export type LikedNiggunimQueryResult = Apollo.QueryResult<LikedNiggunimQuery, LikedNiggunimQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
     email
+    isAdmin
     id
   }
 }
@@ -370,6 +463,7 @@ export const NiggunimDocument = gql`
     title
     link
     length
+    isLiked
   }
 }
     `;

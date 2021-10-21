@@ -21,7 +21,7 @@ const main = async () => {
   const conn = await createConnection({
     type: 'postgres',
     url: process.env.DATABASE_URL,
-    synchronize: true,
+    // synchronize: true,
     logging: true,
     migrations: [path.join(__dirname, './migrations/*')],
     entities: [User, Niggun, Like],
@@ -33,14 +33,7 @@ const main = async () => {
   const redis = new Redis(process.env.REDIS_URL);
   app.set('trust proxy', 1);
 
-  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-
-  // app.use(
-  //   cors({
-  //     origin: 'https://studio.apollographql.com',
-  //     credentials: true,
-  //   })
-  // );
+  app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
 
   app.use(
     session({
@@ -51,6 +44,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: 'lax',
         secure: __prod__,
+        domain: __prod__ ? '.niggundrive.com' : undefined,
       },
       saveUninitialized: false,
       secret: process.env.ACCESS_TOKEN_SECRET || 'amazing secret',

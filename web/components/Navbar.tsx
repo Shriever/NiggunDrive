@@ -1,15 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { IoMenuOutline } from 'react-icons/io5';
+import { IoClose, IoMenuOutline } from 'react-icons/io5';
 import { useLogoutMutation, useMeQuery } from '../generated/graphql';
 import { useApolloClient } from '@apollo/client';
+import MobileNavItem from './MobileNavItem';
+
+type MobileNavItemType = { link: string; title: string };
+const mobileNavItems: MobileNavItemType[] = [
+  { link: '/', title: 'Home' },
+  { link: '/liked-posts', title: 'My Likes' },
+];
 
 const Navbar = () => {
+  const [mobileNavItems, setMobileNavItems] = useState<MobileNavItemType[]>([
+    { link: '/', title: 'Home' },
+    { link: '/liked-posts', title: 'My Likes' },
+  ]);
+  const [showNavbar, setShowNavbar] = useState(false);
   const { data, loading } = useMeQuery();
   const [logout] = useLogoutMutation();
   const apolloClient = useApolloClient();
 
   const loggedIn = !!data?.me;
+
+  useEffect(() => {
+    if (loggedIn) {
+      const newNavItems = [
+        { link: '/', title: 'Home' },
+        { link: '/liked-posts', title: 'My Likes' },
+      ];
+
+      newNavItems.push({ link: '/upload', title: 'Upload' });
+      newNavItems.push({ link: '_logout', title: 'Logout' });
+      setMobileNavItems(newNavItems);
+    } else {
+      const newNavItems = [
+        { link: '/', title: 'Home' },
+        { link: '/liked-posts', title: 'My Likes' },
+      ];
+
+      newNavItems.push({ link: '/login', title: 'Login' });
+      newNavItems.push({ link: '/register', title: 'Register' });
+      setMobileNavItems(newNavItems);
+    }
+  }, [loggedIn]);
+
+  if (loading) {
+    return <div>loading</div>;
+  }
 
   return (
     <nav className='bg-white shadow-lg'>
@@ -68,10 +106,31 @@ const Navbar = () => {
               </a>
             </Link>
           </div>
-          <div className='md:hidden flex items-center cursor-pointer'>
-            <IoMenuOutline size='1.3em' />
+          <div
+            onClick={() => setShowNavbar(!showNavbar)}
+            className='md:hidden flex items-center cursor-pointer'
+          >
+            {showNavbar ? (
+              <IoClose size='1.3em' />
+            ) : (
+              <IoMenuOutline size='1.3em' />
+            )}
           </div>
         </div>
+      </div>
+      <div className='md:hidden'>
+        {showNavbar
+          ? mobileNavItems.map((item, idx) => {
+              return (
+                <MobileNavItem key={idx} link={item.link} logout={logout}>
+                  {item.title}
+                </MobileNavItem>
+              );
+            })
+          : null}
+        {loggedIn && showNavbar ? (
+          <div className='py-3 pl-2 border-b-2'>{data.me?.email}</div>
+        ) : null}
       </div>
     </nav>
   );

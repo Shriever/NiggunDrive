@@ -24,6 +24,10 @@ export class User extends BaseEntity {
   @Column()
   password!: string;
 
+  @Field(() => Boolean, { nullable: true })
+  @Column({ nullable: true })
+  isAdmin?: boolean;
+
   @OneToMany(() => Like, like => like.user)
   likes: Like[];
 

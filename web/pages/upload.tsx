@@ -31,6 +31,9 @@ const upload: NextPage = () => {
             setErrors({ title: 'Please provide a valid MP3 file.' });
             return;
           }
+          if (!data?.getAWSUploadUrl) {
+            setErrors({ title: 'Only admins may upload niggunim.' });
+          }
           if (data) {
             const { uploadUrl } = data.getAWSUploadUrl;
             await fetch(uploadUrl, {
