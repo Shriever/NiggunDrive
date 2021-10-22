@@ -119,7 +119,7 @@ const Niggun = ({
 
   const handleLike = async () => {
     try {
-      const res = await like({
+      await like({
         variables: { niggunId: trackIndex },
         update: cache => updateAfterLike(trackIndex, cache),
       });
