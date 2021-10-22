@@ -6,10 +6,6 @@ import { useApolloClient } from '@apollo/client';
 import MobileNavItem from './MobileNavItem';
 
 type MobileNavItemType = { link: string; title: string };
-const mobileNavItems: MobileNavItemType[] = [
-  { link: '/', title: 'Home' },
-  { link: '/liked-posts', title: 'My Likes' },
-];
 
 const Navbar = () => {
   const [mobileNavItems, setMobileNavItems] = useState<MobileNavItemType[]>([
