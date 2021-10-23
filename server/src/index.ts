@@ -26,7 +26,7 @@ const main = async () => {
     migrations: [path.join(__dirname, './migrations/*')],
     entities: [User, Niggun, Like],
   });
-  // `${conn}`; 
+  // `${conn}`;
   await conn.runMigrations();
 
   const app = express();
@@ -77,7 +77,7 @@ const main = async () => {
   app.listen(PORT, () => {
     console.log('listening on port ' + PORT);
   });
-};;;
+};;;;
 
 main().catch(err => {
   console.error(err);
