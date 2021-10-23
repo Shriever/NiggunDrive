@@ -9,7 +9,7 @@ export const formatTime = (seconds: number) => {
     const remainingSeconds = seconds % 60;
 
     if (minutes < 10 && remainingSeconds < 10) {
-      return `0${minutes}:0${remainingSeconds}`;
+      return `${minutes}:0${remainingSeconds}`;
     } else if (minutes < 10) {
       return `${minutes}:${remainingSeconds}`;
     } else if (remainingSeconds < 10) {
