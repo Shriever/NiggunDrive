@@ -15,7 +15,7 @@ import { toErrorMap } from '../utils/toErrorMap';
 
 const login: NextPage = () => {
   const router = useRouter();
-  const [login] = useLoginMutation();
+  const [login, {loading}] = useLoginMutation();
 
 
   return (
