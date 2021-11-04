@@ -69,6 +69,33 @@ const login: NextPage = () => {
               </span>
             ) : null}
             <SubmitButton disabled={isSubmitting} text='LOG IN NOW' />
+            <button
+              onClick={async () => {
+                const response = await login({
+                  variables: {
+                    options: {
+                      email: 'hire@Levi.com',
+                      password: 'public_password',
+                      adminKey: '',
+                    },
+                  },
+                  update: (cache, { data }) => {
+                    cache.writeQuery<MeQuery>({
+                      query: MeDocument,
+                      data: {
+                        __typename: 'Query',
+                        me: data?.login.user,
+                      },
+                    });
+                    cache.evict({ fieldName: 'niggunim:{}' });
+                  },
+                });
+                router.push('/');
+              }}
+              className='mt-4 py-4 px-6 font-medium rounded bg-green-500 text-white hover:bg-green-400 transition duration-300'
+            >
+              AUTO-LOGIN FOR RECRUITERS
+            </button>
           </form>
         )}
       </Formik>
