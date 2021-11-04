@@ -7,14 +7,15 @@ export const formatTime = (seconds: number) => {
   } else {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    if (minutes < 10 && seconds < 10) {
-      return `0${minutes}:0${seconds}`;
+
+    if (minutes < 10 && remainingSeconds < 10) {
+      return `${minutes}:0${remainingSeconds}`;
     } else if (minutes < 10) {
-      return `0${minutes}:${seconds}`;
-    } else if (seconds < 10) {
-      return `${minutes}:0${seconds}`;
+      return `${minutes}:${remainingSeconds}`;
+    } else if (remainingSeconds < 10) {
+      return `${minutes}:0${remainingSeconds}`;
     } else {
-      return `${minutes}:${seconds}`;
+      return `${minutes}:${remainingSeconds}`;
     }
   }
 };
